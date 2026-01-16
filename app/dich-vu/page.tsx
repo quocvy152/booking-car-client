@@ -35,7 +35,7 @@ const services = [
       'Hỗ trợ hành lý miễn phí'
     ],
     color: 'blue',
-    link: '/services/airport'
+    link: '/dich-vu/dua-don-san-bay'
   },
   {
     id: 'intercity',
@@ -50,7 +50,7 @@ const services = [
       'Hỗ trợ 24/7'
     ],
     color: 'green',
-    link: '/services/intercity'
+    link: '/dich-vu/di-tinh'
   },
   {
     id: 'tour',
@@ -65,7 +65,7 @@ const services = [
       'Chụp ảnh kỷ niệm'
     ],
     color: 'purple',
-    link: '/services/tour'
+    link: '/dich-vu/du-lich'
   },
   {
     id: 'with-driver',
@@ -80,7 +80,7 @@ const services = [
       'Hỗ trợ đa ngôn ngữ'
     ],
     color: 'orange',
-    link: '/services/with-driver'
+    link: '/dich-vu/thue-xe-co-tai-xe'
   },
   {
     id: 'self-drive',
@@ -95,7 +95,7 @@ const services = [
       'Hỗ trợ 24/7'
     ],
     color: 'red',
-    link: '/services/self-drive',
+    link: '/dich-vu/thue-xe-tu-lai',
     comingSoon: true
   }
 ]

@@ -137,7 +137,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link 
-                  href="/services/airport" 
+                  href="/dich-vu/dua-don-san-bay" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Đưa đón sân bay
@@ -145,7 +145,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services/intercity" 
+                  href="/dich-vu/di-tinh" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Đi tỉnh
@@ -153,7 +153,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services/tour" 
+                  href="/dich-vu/du-lich" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Du lịch
@@ -161,7 +161,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services/with-driver" 
+                  href="/dich-vu/thue-xe-co-tai-xe" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Thuê xe có tài xế
@@ -169,7 +169,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services/self-drive" 
+                  href="/dich-vu/thue-xe-tu-lai" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Thuê xe tự lái
