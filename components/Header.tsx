@@ -3,11 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -26,22 +28,54 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-1">
             <Link 
               href="/" 
-              className="text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer"
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
             >
               Trang chủ
             </Link>
             <Link 
-              href="/about" 
-              className="text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer"
+              href="/gioi-thieu" 
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/gioi-thieu' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
             >
               Giới thiệu
             </Link>
             <Link 
-              href="/contact" 
-              className="text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer"
+              href="/dich-vu" 
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/dich-vu' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              Dịch vụ
+            </Link>
+            <Link 
+              href="/bang-gia" 
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/bang-gia' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              Bảng giá
+            </Link>
+            <Link 
+              href="/lien-he" 
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/lien-he' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
             >
               Liên hệ
             </Link>
@@ -49,12 +83,14 @@ export default function Header() {
 
           {/* Desktop Login/Register Button */}
           <div className="hidden md:block">
-            <Button 
-              variant="default" 
-              className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer"
-            >
-              Đăng nhập / Đăng ký
-            </Button>
+            <Link href="/dang-nhap">
+              <Button 
+                variant="default" 
+                className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
+              >
+                Đăng nhập / Đăng ký
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,35 +109,70 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden pb-4 space-y-3 border-t border-gray-200 mt-2 pt-4">
+          <div className="md:hidden pb-4 space-y-1 border-t border-gray-200 mt-2 pt-4">
             <Link 
               href="/" 
-              className="block text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer py-2"
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Trang chủ
             </Link>
             <Link 
-              href="/about" 
-              className="block text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer py-2"
+              href="/gioi-thieu" 
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/gioi-thieu' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Giới thiệu
             </Link>
             <Link 
-              href="/contact" 
-              className="block text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer py-2"
+              href="/dich-vu" 
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/dich-vu' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Dịch vụ
+            </Link>
+            <Link 
+              href="/bang-gia" 
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/bang-gia' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Bảng giá
+            </Link>
+            <Link 
+              href="/lien-he" 
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/lien-he' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Liên hệ
             </Link>
-            <Button 
-              variant="default" 
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Đăng nhập / Đăng ký
-            </Button>
+            <Link href="/dang-nhap" onClick={() => setMobileMenuOpen(false)}>
+              <Button 
+                variant="default" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
+              >
+                Đăng nhập / Đăng ký
+              </Button>
+            </Link>
           </div>
         )}
       </nav>

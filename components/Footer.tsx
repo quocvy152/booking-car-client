@@ -96,7 +96,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/about" 
+                  href="/gioi-thieu" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Giới thiệu
@@ -104,7 +104,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/services" 
+                  href="/dich-vu" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Dịch vụ
@@ -112,7 +112,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/pricing" 
+                  href="/bang-gia" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Bảng giá
@@ -120,7 +120,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/contact" 
+                  href="/lien-he" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Liên hệ
@@ -237,19 +237,19 @@ export default function Footer() {
             {/* Legal Links */}
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-6">
               <Link 
-                href="/privacy" 
+                href="/chinh-sach-bao-mat" 
                 className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 Chính sách bảo mật
               </Link>
               <Link 
-                href="/terms" 
+                href="/dieu-khoan" 
                 className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 Điều khoản sử dụng
               </Link>
               <Link 
-                href="/refund" 
+                href="/hoan-tien" 
                 className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 Chính sách hoàn tiền

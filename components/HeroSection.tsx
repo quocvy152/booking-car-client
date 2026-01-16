@@ -16,7 +16,7 @@ export default function HeroSection() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
               Đặt xe Tây Ninh
               <br />
-              <span className="text-blue-600">Giá rẻ, Uy tín</span>
+              <span className="text-blue-600">Giá rẻ, Uy tín, Tiết kiệm</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0">
               Dịch vụ đặt xe chuyên nghiệp với giá cả minh bạch. 
