@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -14,7 +15,14 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 cursor-pointer">
-            <span className="text-xl sm:text-2xl font-bold text-slate-900">Tây Ninh Car</span>
+            <Image
+              src="/logo.png"
+              alt="Tây Ninh Car"
+              width={120}
+              height={40}
+              className="h-8 w-auto sm:h-10 object-contain"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation Links */}
