@@ -160,7 +160,7 @@ export default function ServicesPage() {
                   className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-gray-200 cursor-pointer hover:shadow-2xl transition-all duration-200 flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`${colorClasses[service.color]} rounded-xl p-3`}>
+                    <div className={`${colorClasses[service.color as keyof typeof colorClasses]} rounded-xl p-3`}>
                       <Icon className="h-6 w-6" />
                     </div>
                     {service.comingSoon && (
