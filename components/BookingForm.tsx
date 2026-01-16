@@ -81,12 +81,16 @@ export default function BookingForm() {
             <SelectValue placeholder="Chọn loại xe">
               {carType === '4-seats' && '4 chỗ'}
               {carType === '7-seats' && '7 chỗ'}
+              {carType === '16-seats' && '16 chỗ'}
+              {carType === '29-seats' && '29 chỗ'}
               {carType === 'limousine' && 'Limousine'}
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="4-seats">4 chỗ</SelectItem>
             <SelectItem value="7-seats">7 chỗ</SelectItem>
+            <SelectItem value="16-seats">16 chỗ</SelectItem>
+            <SelectItem value="29-seats">29 chỗ</SelectItem>
             <SelectItem value="limousine">Limousine</SelectItem>
           </SelectContent>
         </Select>
