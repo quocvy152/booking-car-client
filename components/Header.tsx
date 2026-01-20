@@ -60,6 +60,16 @@ export default function Header() {
               Dịch vụ
             </Link>
             <Link 
+              href="/xe" 
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/xe' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              Danh sách xe
+            </Link>
+            {/* <Link 
               href="/bang-gia" 
               className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                 pathname === '/bang-gia' 
@@ -68,7 +78,7 @@ export default function Header() {
               }`}
             >
               Bảng giá
-            </Link>
+            </Link> */}
             <Link 
               href="/lien-he" 
               className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
@@ -144,6 +154,17 @@ export default function Header() {
               Dịch vụ
             </Link>
             <Link 
+              href="/xe" 
+              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
+                pathname === '/xe' 
+                  ? 'text-blue-600 bg-blue-50' 
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Danh sách xe
+            </Link>
+            {/* <Link 
               href="/bang-gia" 
               className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
                 pathname === '/bang-gia' 
@@ -153,7 +174,7 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Bảng giá
-            </Link>
+            </Link> */}
             <Link 
               href="/lien-he" 
               className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${

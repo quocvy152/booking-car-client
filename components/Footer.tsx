@@ -37,7 +37,7 @@ export default function Footer() {
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
               Dịch vụ đặt xe Tây Ninh chuyên nghiệp với giá cả minh bạch. 
-              Đưa đón sân bay, đi tỉnh, du lịch với tài xế uy tín.
+              Thuê xe tự lái và thuê xe có tài xế uy tín.
             </p>
             {/* Social Media Links */}
             <div className="flex items-center space-x-4 pt-2">
@@ -110,14 +110,14 @@ export default function Footer() {
                   Dịch vụ
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link 
                   href="/bang-gia" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Bảng giá
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link 
                   href="/lien-he" 
@@ -137,26 +137,10 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link 
-                  href="/dich-vu/dua-don-san-bay" 
+                  href="/dich-vu/thue-xe-tu-lai" 
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
-                  Đưa đón sân bay
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/dich-vu/di-tinh" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Đi tỉnh
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/dich-vu/du-lich" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Du lịch
+                  Thuê xe tự lái
                 </Link>
               </li>
               <li>
@@ -165,14 +149,6 @@ export default function Footer() {
                   className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
                 >
                   Thuê xe có tài xế
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/dich-vu/thue-xe-tu-lai" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Thuê xe tự lái
                 </Link>
               </li>
             </ul>

@@ -2,11 +2,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { 
-  Plane, 
-  MapPin, 
   Car, 
   Users, 
-  Navigation,
   CheckCircle2,
   Info,
   ArrowRight,
@@ -17,71 +14,29 @@ import { Button } from '@/components/ui/button'
 
 export const metadata = {
   title: 'Bảng Giá - Tây Ninh Car',
-  description: 'Bảng giá dịch vụ đặt xe Tây Ninh Car: đưa đón sân bay, đi tỉnh, du lịch, thuê xe có tài xế. Giá cả minh bạch, không phát sinh.',
+  description: 'Bảng giá dịch vụ đặt xe Tây Ninh Car: thuê xe tự lái và thuê xe có tài xế. Giá cả minh bạch, không phát sinh.',
 }
 
 const pricingPlans = [
   {
-    id: 'airport',
-    icon: Plane,
-    title: 'Đưa Đón Sân Bay',
-    subtitle: 'Dịch vụ đưa đón sân bay chuyên nghiệp',
+    id: 'self-drive',
+    icon: Car,
+    title: 'Thuê Xe Tự Lái',
+    subtitle: 'Dịch vụ thuê xe tự lái với nhiều loại xe đời mới',
     popular: true,
     routes: [
-      { name: 'Tây Ninh ↔ Sân bay Tân Sơn Nhất', price: '800.000đ', note: 'Một chiều' },
-      { name: 'Tây Ninh ↔ Sân bay Tân Sơn Nhất', price: '1.500.000đ', note: 'Khứ hồi' },
-      { name: 'Tây Ninh ↔ Sân bay Long Thành', price: '1.200.000đ', note: 'Một chiều' },
-      { name: 'Tây Ninh ↔ Sân bay Long Thành', price: '2.200.000đ', note: 'Khứ hồi' },
+      { name: 'Xe 4 chỗ', price: '500.000đ', note: '1 ngày' },
+      { name: 'Xe 7 chỗ', price: '800.000đ', note: '1 ngày' },
+      { name: 'Xe 16 chỗ', price: '1.200.000đ', note: '1 ngày' },
+      { name: 'Thuê dài ngày', price: 'Liên hệ', note: 'Giá ưu đãi' },
     ],
     features: [
-      'Đúng giờ, không lo trễ chuyến bay',
-      'Xe đời mới, sạch sẽ',
-      'Hỗ trợ hành lý miễn phí',
-      'Tài xế chuyên nghiệp'
+      'Nhiều loại xe đa dạng, đời mới',
+      'Giá thuê hợp lý, minh bạch',
+      'Thủ tục đơn giản, nhanh chóng',
+      'Bảo hiểm đầy đủ'
     ],
-    note: 'Giá có thể thay đổi tùy theo thời điểm và khoảng cách cụ thể'
-  },
-  {
-    id: 'intercity',
-    icon: MapPin,
-    title: 'Đi Tỉnh',
-    subtitle: 'Dịch vụ đi tỉnh nhanh chóng, an toàn',
-    popular: false,
-    routes: [
-      { name: 'Tây Ninh ↔ TP.HCM', price: '600.000đ', note: 'Một chiều' },
-      { name: 'Tây Ninh ↔ TP.HCM', price: '1.100.000đ', note: 'Khứ hồi' },
-      { name: 'Tây Ninh ↔ Vũng Tàu', price: '800.000đ', note: 'Một chiều' },
-      { name: 'Tây Ninh ↔ Vũng Tàu', price: '1.500.000đ', note: 'Khứ hồi' },
-      { name: 'Tây Ninh ↔ Đà Lạt', price: '1.200.000đ', note: 'Một chiều' },
-      { name: 'Tây Ninh ↔ Đà Lạt', price: '2.200.000đ', note: 'Khứ hồi' },
-    ],
-    features: [
-      'Nhiều tuyến đường phổ biến',
-      'Giá cả cạnh tranh',
-      'Đặt xe nhanh chóng',
-      'Hỗ trợ 24/7'
-    ],
-    note: 'Giá áp dụng cho xe 4 chỗ. Xe 7 chỗ và 16 chỗ có giá khác'
-  },
-  {
-    id: 'tour',
-    icon: Navigation,
-    title: 'Du Lịch',
-    subtitle: 'Tour du lịch trọn gói với tài xế kinh nghiệm',
-    popular: false,
-    routes: [
-      { name: 'Tour 1 ngày', price: '1.500.000đ', note: 'Trong tỉnh' },
-      { name: 'Tour 2 ngày 1 đêm', price: '3.500.000đ', note: 'Liên tỉnh' },
-      { name: 'Tour 3 ngày 2 đêm', price: '5.500.000đ', note: 'Liên tỉnh' },
-      { name: 'Tour theo yêu cầu', price: 'Liên hệ', note: 'Tùy chỉnh' },
-    ],
-    features: [
-      'Tài xế am hiểu địa phương',
-      'Lộ trình linh hoạt',
-      'Hỗ trợ đặt khách sạn',
-      'Chụp ảnh kỷ niệm'
-    ],
-    note: 'Giá tour chưa bao gồm vé tham quan, ăn uống và khách sạn'
+    note: 'Giá có thể thay đổi tùy theo loại xe và thời gian thuê'
   },
   {
     id: 'with-driver',

@@ -20,7 +20,7 @@ export default function HeroSection() {
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0">
               Dịch vụ đặt xe chuyên nghiệp với giá cả minh bạch. 
-              Đưa đón sân bay, đi tỉnh, du lịch với tài xế uy tín.
+              Thuê xe tự lái hoặc thuê xe có tài xế uy tín.
             </p>
           </div>
 

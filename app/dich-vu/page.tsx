@@ -2,11 +2,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { 
-  Plane, 
-  MapPin, 
   Car, 
   Users, 
-  Navigation,
   Shield,
   Clock,
   CheckCircle2,
@@ -18,54 +15,24 @@ import { Button } from '@/components/ui/button'
 
 export const metadata = {
   title: 'Dịch Vụ - Tây Ninh Car',
-  description: 'Khám phá các dịch vụ đặt xe chuyên nghiệp của Tây Ninh Car: đưa đón sân bay, đi tỉnh, du lịch, thuê xe có tài xế.',
+  description: 'Khám phá các dịch vụ đặt xe chuyên nghiệp của Tây Ninh Car: thuê xe tự lái và thuê xe có tài xế.',
 }
 
 const services = [
   {
-    id: 'airport',
-    icon: Plane,
-    title: 'Đưa Đón Sân Bay',
-    description: 'Dịch vụ đưa đón sân bay chuyên nghiệp, đúng giờ với giá cả hợp lý. Phục vụ tất cả các sân bay trong khu vực.',
+    id: 'self-drive',
+    icon: Car,
+    title: 'Thuê Xe Tự Lái',
+    description: 'Dịch vụ thuê xe tự lái với nhiều loại xe đời mới, giá cả hợp lý. Tự do khám phá mọi nơi bạn muốn.',
     features: [
-      'Đúng giờ, không lo trễ chuyến bay',
-      'Xe đời mới, sạch sẽ, tiện nghi',
-      'Tài xế chuyên nghiệp, nhiệt tình',
-      'Giá cả minh bạch, không phát sinh',
-      'Hỗ trợ hành lý miễn phí'
-    ],
-    color: 'blue',
-    link: '/dich-vu/dua-don-san-bay'
-  },
-  {
-    id: 'intercity',
-    icon: MapPin,
-    title: 'Đi Tỉnh',
-    description: 'Dịch vụ đi tỉnh nhanh chóng, an toàn với nhiều tuyến đường phổ biến. Đảm bảo đúng giờ và tiện lợi.',
-    features: [
-      'Nhiều tuyến đường phổ biến',
-      'Giá cả cạnh tranh',
-      'Đặt xe nhanh chóng',
-      'Xe đời mới, an toàn',
+      'Nhiều loại xe đa dạng',
+      'Giá thuê hợp lý',
+      'Thủ tục đơn giản',
+      'Bảo hiểm đầy đủ',
       'Hỗ trợ 24/7'
     ],
-    color: 'green',
-    link: '/dich-vu/di-tinh'
-  },
-  {
-    id: 'tour',
-    icon: Navigation,
-    title: 'Du Lịch',
-    description: 'Tour du lịch trọn gói với tài xế kinh nghiệm, am hiểu địa phương. Trải nghiệm tuyệt vời cho chuyến đi của bạn.',
-    features: [
-      'Tài xế am hiểu địa phương',
-      'Lộ trình linh hoạt',
-      'Giá tour trọn gói',
-      'Hỗ trợ đặt khách sạn',
-      'Chụp ảnh kỷ niệm'
-    ],
-    color: 'purple',
-    link: '/dich-vu/du-lich'
+    color: 'blue',
+    link: '/dich-vu/thue-xe-tu-lai'
   },
   {
     id: 'with-driver',
@@ -81,22 +48,6 @@ const services = [
     ],
     color: 'orange',
     link: '/dich-vu/thue-xe-co-tai-xe'
-  },
-  {
-    id: 'self-drive',
-    icon: Car,
-    title: 'Thuê Xe Tự Lái',
-    description: 'Dịch vụ thuê xe tự lái với nhiều loại xe đời mới, giá cả hợp lý. Tự do khám phá mọi nơi bạn muốn.',
-    features: [
-      'Nhiều loại xe đa dạng',
-      'Giá thuê hợp lý',
-      'Thủ tục đơn giản',
-      'Bảo hiểm đầy đủ',
-      'Hỗ trợ 24/7'
-    ],
-    color: 'red',
-    link: '/dich-vu/thue-xe-tu-lai',
-    comingSoon: true
   }
 ]
 
@@ -135,23 +86,20 @@ export default function ServicesPage() {
               Dịch Vụ <span className="text-blue-600">Của Chúng Tôi</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Đa dạng dịch vụ đáp ứng mọi nhu cầu di chuyển của bạn. 
-              Từ đưa đón sân bay đến thuê xe tự lái, chúng tôi có giải pháp phù hợp cho bạn.
+              Dịch vụ đặt xe chuyên nghiệp đáp ứng mọi nhu cầu di chuyển của bạn. 
+              Thuê xe tự lái hoặc thuê xe có tài xế, chúng tôi có giải pháp phù hợp cho bạn.
             </p>
           </div>
         </section>
 
         {/* Services Grid */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {services.map((service) => {
               const Icon = service.icon
               const colorClasses = {
                 blue: 'bg-blue-100 text-blue-600',
-                green: 'bg-green-100 text-green-600',
-                purple: 'bg-purple-100 text-purple-600',
-                orange: 'bg-orange-100 text-orange-600',
-                red: 'bg-red-100 text-red-600'
+                orange: 'bg-orange-100 text-orange-600'
               }
 
               return (
@@ -163,11 +111,6 @@ export default function ServicesPage() {
                     <div className={`${colorClasses[service.color as keyof typeof colorClasses]} rounded-xl p-3`}>
                       <Icon className="h-6 w-6" />
                     </div>
-                    {service.comingSoon && (
-                      <span className="px-3 py-1 text-xs font-medium bg-amber-100 text-amber-700 rounded-full border border-amber-200">
-                        Sắp ra mắt
-                      </span>
-                    )}
                   </div>
                   
                   <h3 className="text-xl font-bold text-slate-900 mb-3">
@@ -187,25 +130,15 @@ export default function ServicesPage() {
                     ))}
                   </div>
 
-                  {!service.comingSoon ? (
-                    <Link href={service.link}>
-                      <Button 
-                        variant="outline" 
-                        className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors duration-200 cursor-pointer group px-5 py-2.5 text-sm font-medium"
-                      >
-                        Tìm hiểu thêm
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
-                      </Button>
-                    </Link>
-                  ) : (
+                  <Link href={service.link}>
                     <Button 
                       variant="outline" 
-                      disabled
-                      className="w-full border-gray-300 text-gray-400 cursor-not-allowed px-5 py-2.5 text-sm font-medium"
+                      className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 transition-colors duration-200 cursor-pointer group px-5 py-2.5 text-sm font-medium"
                     >
-                      Sắp ra mắt
+                      Tìm hiểu thêm
+                      <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
                     </Button>
-                  )}
+                  </Link>
                 </div>
               )
             })}
