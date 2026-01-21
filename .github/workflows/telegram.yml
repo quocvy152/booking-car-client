@@ -15,11 +15,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # KHUYẾN NGHỊ: Luôn setup Node.js cụ thể + Caching
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Hoặc phiên bản bạn đang dùng
+          node-version: '20'
           cache: 'npm'
 
       - name: Install deps
@@ -29,9 +28,8 @@ jobs:
         run: npm run build
 
       - name: Notify Telegram
-        if: always() # Luôn chạy dù build fail
+        if: always()
         env:
-          # Map secret vào biến môi trường để an toàn hơn
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           JOB_STATUS: ${{ job.status }}
