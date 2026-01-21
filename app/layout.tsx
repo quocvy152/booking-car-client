@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import React from 'react'
 import ChatBot from '@/components/ChatBot'
+import { AuthProvider } from '@/lib/auth/auth-context'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'vietnamese'] })
@@ -24,8 +25,10 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body className={inter.className}>
-        {children}
-        <ChatBot />
+        <AuthProvider>
+          {children}
+          <ChatBot />
+        </AuthProvider>
       </body>
     </html>
   )

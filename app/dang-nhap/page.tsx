@@ -1,14 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react'
+import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus, AlertCircle } from 'lucide-react'
+import { useAuth } from '@/lib/auth/use-auth'
 
 export default function LoginPage() {
+  const router = useRouter()
+  const { login, register, isAuthenticated, isLoading, error, clearError } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -23,23 +27,64 @@ export default function LoginPage() {
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('')
+  const [localError, setLocalError] = useState<string | null>(null)
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/')
+    }
+  }, [isAuthenticated, router])
+
+  // Clear errors when switching between login/register
+  useEffect(() => {
+    clearError()
+    setLocalError(null)
+  }, [isLogin, clearError])
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log('Login:', { email: loginEmail, password: loginPassword })
+    setLocalError(null)
+    clearError()
+
+    try {
+      await login({
+        email: loginEmail,
+        password: loginPassword,
+      })
+      // Redirect happens automatically in auth context
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Đăng nhập thất bại'
+      setLocalError(errorMessage)
+    }
   }
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle register logic here
-    console.log('Register:', {
-      name: registerName,
-      phone: registerPhone,
-      email: registerEmail,
-      password: registerPassword,
-    })
+    setLocalError(null)
+    clearError()
+
+    // Validate password match
+    if (registerPassword !== registerConfirmPassword) {
+      setLocalError('Mật khẩu không khớp')
+      return
+    }
+
+    try {
+      await register({
+        name: registerName,
+        email: registerEmail,
+        phone: registerPhone,
+        password: registerPassword,
+      })
+      // Redirect happens automatically in auth context
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Đăng ký thất bại'
+      setLocalError(errorMessage)
+    }
   }
+
+  const displayError = localError || error
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
@@ -86,6 +131,14 @@ export default function LoginPage() {
               </p>
             </div>
 
+            {/* Error Message */}
+            {displayError && (
+              <div className="mb-5 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-600 flex-1">{displayError}</p>
+              </div>
+            )}
+
             {/* Login Form */}
             {isLogin && (
               <form onSubmit={handleLoginSubmit} className="space-y-5">
@@ -104,6 +157,7 @@ export default function LoginPage() {
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className="pl-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -123,12 +177,14 @@ export default function LoginPage() {
                       onChange={(e) => setLoginPassword(e.target.value)}
                       className="pl-10 pr-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200 cursor-pointer"
                       aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      disabled={isLoading}
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" />
@@ -152,9 +208,10 @@ export default function LoginPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
+                  className="w-full h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
                 >
-                  Đăng nhập
+                  {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
                 </Button>
               </form>
             )}
@@ -177,6 +234,7 @@ export default function LoginPage() {
                       onChange={(e) => setRegisterName(e.target.value)}
                       className="pl-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -196,6 +254,7 @@ export default function LoginPage() {
                       onChange={(e) => setRegisterPhone(e.target.value)}
                       className="pl-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -215,6 +274,7 @@ export default function LoginPage() {
                       onChange={(e) => setRegisterEmail(e.target.value)}
                       className="pl-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -235,6 +295,7 @@ export default function LoginPage() {
                       className="pl-10 pr-10 h-12 rounded-lg"
                       required
                       minLength={6}
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -266,6 +327,7 @@ export default function LoginPage() {
                       onChange={(e) => setRegisterConfirmPassword(e.target.value)}
                       className="pl-10 pr-10 h-12 rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -308,10 +370,10 @@ export default function LoginPage() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
-                  disabled={registerPassword !== registerConfirmPassword && registerConfirmPassword !== ''}
+                  className="w-full h-12 text-base font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={(registerPassword !== registerConfirmPassword && registerConfirmPassword !== '') || isLoading}
                 >
-                  Đăng ký
+                  {isLoading ? 'Đang xử lý...' : 'Đăng ký'}
                 </Button>
               </form>
             )}

@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus, X } from 'lucide-react'
+import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus, X, AlertCircle } from 'lucide-react'
+import { useAuth } from '@/lib/auth/use-auth'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -13,6 +15,8 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const router = useRouter()
+  const { login, register, isAuthenticated, isLoading, error, clearError } = useAuth()
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -27,6 +31,15 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('')
+  const [localError, setLocalError] = useState<string | null>(null)
+
+  // Close modal and redirect if authenticated
+  useEffect(() => {
+    if (isAuthenticated && isOpen) {
+      onClose()
+      router.push('/auth-success?type=' + (isLogin ? 'login' : 'register'))
+    }
+  }, [isAuthenticated, isOpen, isLogin, onClose, router])
 
   // Reset form when modal closes
   useEffect(() => {
@@ -41,8 +54,16 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       setRegisterConfirmPassword('')
       setShowPassword(false)
       setShowConfirmPassword(false)
+      setLocalError(null)
+      clearError()
     }
-  }, [isOpen])
+  }, [isOpen, clearError])
+
+  // Clear errors when switching between login/register
+  useEffect(() => {
+    clearError()
+    setLocalError(null)
+  }, [isLogin, clearError])
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -67,26 +88,49 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     return () => window.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle login logic here
-    console.log('Login:', { email: loginEmail, password: loginPassword })
-    // Close modal after successful login (you can add your logic here)
-    // onClose()
+    setLocalError(null)
+    clearError()
+
+    try {
+      await login({
+        email: loginEmail,
+        password: loginPassword,
+      })
+      // Modal will close automatically via useEffect when authenticated
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Đăng nhập thất bại'
+      setLocalError(errorMessage)
+    }
   }
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle register logic here
-    console.log('Register:', {
-      name: registerName,
-      phone: registerPhone,
-      email: registerEmail,
-      password: registerPassword,
-    })
-    // Close modal after successful registration (you can add your logic here)
-    // onClose()
+    setLocalError(null)
+    clearError()
+
+    // Validate password match
+    if (registerPassword !== registerConfirmPassword) {
+      setLocalError('Mật khẩu không khớp')
+      return
+    }
+
+    try {
+      await register({
+        name: registerName,
+        email: registerEmail,
+        phone: registerPhone,
+        password: registerPassword,
+      })
+      // Modal will close automatically via useEffect when authenticated
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Đăng ký thất bại'
+      setLocalError(errorMessage)
+    }
   }
+
+  const displayError = localError || error
 
   const [mounted, setMounted] = useState(false)
 
@@ -158,6 +202,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               </p>
             </div>
 
+            {/* Error Message */}
+            {displayError && (
+              <div className="mb-3 p-2.5 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-red-600 flex-1">{displayError}</p>
+              </div>
+            )}
+
             {/* Login Form */}
             {isLogin && (
               <form onSubmit={handleLoginSubmit} className="space-y-3">
@@ -176,6 +228,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className="pl-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -195,6 +248,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setLoginPassword(e.target.value)}
                       className="pl-9 pr-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -225,9 +279,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-10 text-sm font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer mt-3"
+                  className="w-full h-10 text-sm font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isLoading}
                 >
-                  Đăng nhập
+                  {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
                 </Button>
               </form>
             )}
@@ -250,6 +305,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setRegisterName(e.target.value)}
                       className="pl-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -269,6 +325,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setRegisterPhone(e.target.value)}
                       className="pl-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -288,6 +345,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setRegisterEmail(e.target.value)}
                       className="pl-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -308,6 +366,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       className="pl-9 pr-9 h-10 text-sm rounded-lg"
                       required
                       minLength={6}
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -339,6 +398,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={(e) => setRegisterConfirmPassword(e.target.value)}
                       className="pl-9 pr-9 h-10 text-sm rounded-lg"
                       required
+                      disabled={isLoading}
                     />
                     <button
                       type="button"
@@ -381,10 +441,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full h-10 text-sm font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer mt-3"
-                  disabled={registerPassword !== registerConfirmPassword && registerConfirmPassword !== ''}
+                  className="w-full h-10 text-sm font-medium bg-blue-600 hover:bg-blue-700 transition-colors duration-200 cursor-pointer mt-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={(registerPassword !== registerConfirmPassword && registerConfirmPassword !== '') || isLoading}
                 >
-                  Đăng ký
+                  {isLoading ? 'Đang xử lý...' : 'Đăng ký'}
                 </Button>
               </form>
             )}

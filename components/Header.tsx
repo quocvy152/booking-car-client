@@ -7,11 +7,14 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import LoginModal from '@/components/LoginModal'
+import UserProfile from '@/components/UserProfile'
+import { useAuth } from '@/lib/auth/use-auth'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const pathname = usePathname()
+  const { isAuthenticated } = useAuth()
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -93,15 +96,19 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Desktop Login/Register Button */}
+          {/* Desktop Login/Register Button or User Profile */}
           <div className="hidden md:block">
-            <Button 
-              variant="default" 
-              onClick={() => setLoginModalOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
-            >
-              Đăng nhập / Đăng ký
-            </Button>
+            {isAuthenticated ? (
+              <UserProfile />
+            ) : (
+              <Button 
+                variant="default" 
+                onClick={() => setLoginModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
+              >
+                Đăng nhập / Đăng ký
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -187,16 +194,22 @@ export default function Header() {
             >
               Liên hệ
             </Link>
-            <Button 
-              variant="default" 
-              onClick={() => {
-                setMobileMenuOpen(false)
-                setLoginModalOpen(true)
-              }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
-            >
-              Đăng nhập / Đăng ký
-            </Button>
+            {isAuthenticated ? (
+              <div className="mt-2">
+                <UserProfile />
+              </div>
+            ) : (
+              <Button 
+                variant="default" 
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  setLoginModalOpen(true)
+                }}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
+              >
+                Đăng nhập / Đăng ký
+              </Button>
+            )}
           </div>
         )}
       </nav>
