@@ -6,9 +6,11 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import LoginModal from '@/components/LoginModal'
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
   const pathname = usePathname()
 
   return (
@@ -93,14 +95,13 @@ export default function Header() {
 
           {/* Desktop Login/Register Button */}
           <div className="hidden md:block">
-            <Link href="/dang-nhap">
-              <Button 
-                variant="default" 
-                className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
-              >
-                Đăng nhập / Đăng ký
-              </Button>
-            </Link>
+            <Button 
+              variant="default" 
+              onClick={() => setLoginModalOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
+            >
+              Đăng nhập / Đăng ký
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -186,17 +187,22 @@ export default function Header() {
             >
               Liên hệ
             </Link>
-            <Link href="/dang-nhap" onClick={() => setMobileMenuOpen(false)}>
-              <Button 
-                variant="default" 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
-              >
-                Đăng nhập / Đăng ký
-              </Button>
-            </Link>
+            <Button 
+              variant="default" 
+              onClick={() => {
+                setMobileMenuOpen(false)
+                setLoginModalOpen(true)
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
+            >
+              Đăng nhập / Đăng ký
+            </Button>
           </div>
         )}
       </nav>
+
+      {/* Login Modal */}
+      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
     </header>
   )
 }
