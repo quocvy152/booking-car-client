@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, MapPin, Zap, Users, Fuel, Gauge } from 'lucide-react'
+import { Star, MapPin, Zap, Users, Fuel, Gauge, Heart } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 export interface Car {
@@ -23,6 +23,7 @@ export interface Car {
   shortTermHours?: number
   featured?: boolean
   noCollateral?: boolean
+  isFavorite?: boolean
 }
 
 interface CarCardProps {
@@ -56,6 +57,20 @@ export default function CarCard({ car }: CarCardProps) {
             </div>
           </div>
         )}
+
+        {/* Favorite Icon - Top Right */}
+        <div className="absolute top-2 right-2 z-10">
+          <div className="bg-white/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm">
+            <Heart
+              className={`h-3.5 w-3.5 ${
+                car.isFavorite
+                  ? 'text-red-500 fill-red-500'
+                  : 'text-slate-700'
+              }`}
+              fill="currentColor"
+            />
+          </div>
+        </div>
 
         {/* Discount Badge - Bottom Right */}
         {car.discount && car.discount > 0 && (
