@@ -4,9 +4,9 @@
  * Handles location search and geocoding
  */
 
-import { buildNominatimUrl, API_HEADERS } from './config'
+import { API_CONFIG, API_HEADERS, buildNominatimUrl } from './config'
+import type { NominatimSearchParams, NominatimSuggestion } from './types'
 import { ApiError } from './types'
-import type { NominatimSuggestion, NominatimSearchParams } from './types'
 
 /**
  * Search for location suggestions using Nominatim API
@@ -26,7 +26,10 @@ export async function searchLocations(
   }
 
   try {
-    const url = buildNominatimUrl(query, params)
+    const url = buildNominatimUrl(
+      query,
+      params as Partial<typeof API_CONFIG.NOMINATIM.DEFAULT_PARAMS>
+    )
     const response = await fetch(url, {
       headers: API_HEADERS.NOMINATIM,
       // Add cache control for better performance

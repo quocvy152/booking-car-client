@@ -15,9 +15,10 @@ export interface NominatimSuggestion {
 
 export interface NominatimSearchParams {
   query: string
-  countrycodes?: string
+  countrycodes?: 'vn'
   limit?: number
-  addressdetails?: number
+  addressdetails?: 1
+  format?: 'json'
 }
 
 /**
