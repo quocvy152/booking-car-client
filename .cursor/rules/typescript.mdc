@@ -1,0 +1,161 @@
+---
+description: TypeScript patterns, type definitions, and best practices
+globs: **/*.ts, **/*.tsx
+alwaysApply: true
+---
+
+- **Type Definitions:**
+  - Define interfaces for component props
+  - Use type aliases for unions and complex types
+  - Export types that are used across multiple files
+  - Place type definitions in the same file or dedicated types files
+
+- **Component Props:**
+  ```tsx
+  // ✅ DO: Define clear prop interfaces
+  interface ComponentProps {
+    // Required props
+    title: string
+    // Optional props
+    variant?: 'primary' | 'secondary'
+    // Event handlers
+    onSubmit?: (data: FormData) => void
+    // Children
+    children?: React.ReactNode
+  }
+  
+  export default function Component({ title, variant, onSubmit, children }: ComponentProps) {
+    // ...
+  }
+  ```
+
+- **Type Exports:**
+  ```tsx
+  // ✅ DO: Export types used externally
+  export interface Car {
+    id: string
+    name: string
+    year: number
+    // ...
+  }
+  
+  // ✅ DO: Export types with components
+  export interface CarCardProps {
+    car: Car
+  }
+  
+  export default function CarCard({ car }: CarCardProps) {
+    // ...
+  }
+  ```
+
+- **API Types:**
+  - Define API response types in `lib/api/types.ts`
+  - Use consistent naming: `*Response`, `*Request`, `*Params`
+  ```tsx
+  // ✅ DO: API types (see [lib/api/types.ts](mdc:lib/api/types.ts))
+  export interface NominatimSuggestion {
+    place_id: number
+    display_name: string
+    lat: number
+    lon: number
+  }
+  
+  export interface RouteInfo {
+    distance: number
+    duration: number
+  }
+  ```
+
+- **Auth Types:**
+  - Auth types are in `lib/auth/types.ts`
+  - Use consistent patterns for user, credentials, and status types
+  ```tsx
+  // ✅ DO: Auth types (see [lib/auth/types.ts](mdc:lib/auth/types.ts))
+  export interface User {
+    id: string
+    email: string
+    name: string
+    // ...
+  }
+  
+  export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error'
+  ```
+
+- **Type Safety:**
+  - Avoid `any` type - use `unknown` if type is truly unknown
+  - Use type assertions sparingly and with validation
+  - Prefer type guards for runtime type checking
+  ```tsx
+  // ✅ DO: Type guards
+  function isApiError(error: unknown): error is ApiError {
+    return error !== null && 
+           typeof error === 'object' && 
+           'name' in error && 
+           error.name === 'ApiError'
+  }
+  
+  // ❌ DON'T: Unsafe type assertions
+  const data = response as SomeType // Without validation
+  ```
+
+- **Generic Types:**
+  - Use generics for reusable components and utilities
+  ```tsx
+  // ✅ DO: Generic utility
+  export function cn(...inputs: ClassValue[]): string {
+    return twMerge(clsx(inputs))
+  }
+  ```
+
+- **React Types:**
+  - Use React's built-in types: `React.ReactNode`, `React.FC` (sparingly)
+  - Extend HTML element props when creating UI components
+  ```tsx
+  // ✅ DO: Extend HTML props
+  export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: "default" | "outline"
+  }
+  ```
+
+- **Hook Return Types:**
+  - Define return types for custom hooks
+  ```tsx
+  // ✅ DO: Hook return type (see [use-auth.ts](mdc:lib/auth/use-auth.ts))
+  interface AuthContextType {
+    user: User | null
+    isAuthenticated: boolean
+    login: (credentials: LoginCredentials) => Promise<void>
+    // ...
+  }
+  ```
+
+- **Error Types:**
+  - Create custom error classes for better error handling
+  ```tsx
+  // ✅ DO: Custom error class (see [lib/api/types.ts](mdc:lib/api/types.ts))
+  export class ApiError extends Error {
+    constructor(
+      message: string,
+      public statusCode?: number,
+      public response?: unknown
+    ) {
+      super(message)
+      this.name = 'ApiError'
+    }
+  }
+  ```
+
+- **Type Imports:**
+  - Use `type` keyword for type-only imports when appropriate
+  ```tsx
+  // ✅ DO: Type-only imports
+  import type { Metadata } from 'next'
+  import type { User, LoginCredentials } from '@/lib/auth/types'
+  ```
+
+- **Strict Type Checking:**
+  - Project uses strict TypeScript (`strict: true` in tsconfig.json)
+  - Ensure all types are properly defined
+  - Avoid implicit `any` types

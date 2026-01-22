@@ -1,0 +1,102 @@
+---
+description: Vietnamese language support, text content, and localization patterns
+globs: **/*.tsx, **/*.ts
+alwaysApply: true
+---
+
+- **Language Support:**
+  - All user-facing text should be in Vietnamese
+  - Use proper Vietnamese diacritics (ă, â, đ, ê, ô, ơ, ư)
+  - Maintain consistent terminology across the app
+
+- **Common Vietnamese Terms:**
+  - "Đặt xe" - Book a car
+  - "Thuê xe tự lái" - Self-drive rental
+  - "Thuê xe có tài xế" - Car with driver rental
+  - "Điểm đón" - Pickup location
+  - "Điểm đến" - Drop-off location
+  - "Loại xe" - Car type
+  - "Ngày đi" - Departure date
+  - "Đăng nhập" - Login
+  - "Đăng ký" - Register
+  - "Liên hệ" - Contact
+
+- **Text Content:**
+  ```tsx
+  // ✅ DO: Vietnamese text
+  <h1>Đặt xe Tây Ninh</h1>
+  <p>Dịch vụ đặt xe chuyên nghiệp với giá cả minh bạch</p>
+  <button>Đăng nhập / Đăng ký</button>
+  
+  // ❌ DON'T: English text (unless for technical terms)
+  <h1>Book a Car</h1>
+  ```
+
+- **Error Messages:**
+  - All error messages in Vietnamese
+  - Use friendly, clear language
+  ```tsx
+  // ✅ DO: Vietnamese error messages
+  throw new Error('Đăng nhập thất bại')
+  setError('Không tìm thấy địa chỉ')
+  console.error('Lỗi kết nối khi tính toán đường đi')
+  ```
+
+- **Form Labels:**
+  - Use descriptive Vietnamese labels
+  - Include helpful placeholder text
+  ```tsx
+  // ✅ DO: Form labels
+  <label htmlFor="pickup">Điểm đón</label>
+  <Input 
+    id="pickup"
+    placeholder="Nhập điểm đón"
+  />
+  ```
+
+- **Metadata:**
+  - Page titles and descriptions in Vietnamese
+  ```tsx
+  // ✅ DO: Vietnamese metadata
+  export const metadata = {
+    title: 'Dịch Vụ - Tây Ninh Car',
+    description: 'Khám phá các dịch vụ đặt xe chuyên nghiệp của Tây Ninh Car',
+  }
+  ```
+
+- **Image Alt Text:**
+  - Alt text in Vietnamese
+  ```tsx
+  // ✅ DO: Vietnamese alt text
+  <Image
+    src="/logo.png"
+    alt="Tây Ninh Car"
+    width={120}
+    height={40}
+  />
+  ```
+
+- **Font Configuration:**
+  - Inter font includes Vietnamese subset
+  - Configured in root layout: `Inter({ subsets: ['latin', 'vietnamese'] })`
+  - HTML lang attribute: `<html lang="vi">`
+
+- **Number Formatting:**
+  - Use Vietnamese locale for number formatting
+  ```tsx
+  // ✅ DO: Vietnamese number format
+  {price.toLocaleString('vi-VN')}K
+  // Example: 675.000 -> "675K"
+  ```
+
+- **Date Formatting:**
+  - Use Vietnamese date format when displaying dates
+  - Consider Vietnamese date picker if needed
+
+- **Currency:**
+  - Prices displayed in Vietnamese Dong (VND)
+  - Use "K" suffix for thousands (e.g., "675K" = 675,000 VND)
+  ```tsx
+  // ✅ DO: Price display
+  <span>{pricePerDay.toLocaleString('vi-VN')}K/ngày</span>
+  ```

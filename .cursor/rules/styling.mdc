@@ -1,0 +1,180 @@
+---
+description: Tailwind CSS styling patterns, color scheme, and design system
+globs: **/*.tsx, **/*.css
+alwaysApply: true
+---
+
+- **Color Palette:**
+  - **Primary Blue:**
+    - `blue-600` - Primary buttons, links, active states
+    - `blue-700` - Hover states for primary elements
+    - `blue-50`, `blue-100` - Light backgrounds, badges
+    - `blue-500` - Focus rings, accents
+  
+  - **Neutral Grays:**
+    - `slate-900` - Primary text
+    - `slate-700` - Secondary text
+    - `slate-600` - Tertiary text
+    - `slate-500` - Placeholder text
+    - `slate-50`, `slate-100` - Backgrounds
+  
+  - **Borders & Dividers:**
+    - `gray-200` - Light borders
+    - `gray-300` - Standard borders
+    - `border-gray-200` - Card borders
+  
+  - **Status Colors:**
+    - `green-600` - Success, prices
+    - `red-500`, `red-600` - Errors, favorites
+    - `orange-500` - Discounts, warnings
+    - `yellow-400` - Featured badges
+
+- **Background Patterns:**
+  ```tsx
+  // ✅ DO: Standard page background
+  className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100"
+  
+  // ✅ DO: Card backgrounds
+  className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200"
+  
+  // ✅ DO: Section backgrounds
+  className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200"
+  ```
+
+- **Spacing System:**
+  - Use Tailwind spacing scale consistently
+  - Common patterns:
+    - Container padding: `px-4 sm:px-6 lg:px-8`
+    - Section spacing: `mb-16`, `pt-24 pb-16`
+    - Component spacing: `space-y-4`, `gap-4`, `gap-6`
+    - Card padding: `p-6 sm:p-8`
+
+- **Typography:**
+  ```tsx
+  // ✅ DO: Heading styles
+  className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6"
+  
+  // ✅ DO: Body text
+  className="text-lg sm:text-xl text-slate-600"
+  
+  // ✅ DO: Small text
+  className="text-sm text-slate-600"
+  ```
+
+- **Border Radius:**
+  - `rounded-lg` - Standard buttons, inputs
+  - `rounded-xl` - Cards, larger elements
+  - `rounded-2xl` - Hero sections, major cards
+  - `rounded-full` - Badges, icons, avatars
+  - `rounded-md` - Small badges
+
+- **Shadows:**
+  ```tsx
+  // ✅ DO: Shadow hierarchy
+  shadow-sm      // Subtle elevation
+  shadow-lg      // Standard cards
+  shadow-xl      // Prominent cards
+  shadow-2xl     // Hero elements, modals
+  hover:shadow-xl // Interactive hover
+  ```
+
+- **Transitions:**
+  - Always include transitions for interactive elements
+  ```tsx
+  // ✅ DO: Standard transitions
+  transition-all duration-200
+  transition-colors duration-200
+  transition-shadow duration-200
+  transition-transform duration-300
+  ```
+
+- **Hover States:**
+  ```tsx
+  // ✅ DO: Button hover
+  className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200"
+  
+  // ✅ DO: Card hover
+  className="hover:shadow-xl transition-shadow duration-200 cursor-pointer"
+  
+  // ✅ DO: Link hover
+  className="hover:text-slate-900 hover:bg-slate-50 transition-all duration-200"
+  ```
+
+- **Focus States:**
+  ```tsx
+  // ✅ DO: Focus rings
+  focus-visible:outline-none 
+  focus-visible:ring-2 
+  focus-visible:ring-blue-500 
+  focus-visible:ring-offset-2
+  ```
+
+- **Gradients:**
+  ```tsx
+  // ✅ DO: Background gradients
+  bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100
+  bg-gradient-to-r from-blue-600 to-blue-700
+  
+  // ✅ DO: Card gradients
+  bg-gradient-to-r from-blue-50 to-indigo-50
+  ```
+
+- **Backdrop Effects:**
+  ```tsx
+  // ✅ DO: Glass morphism effect
+  bg-white/90 backdrop-blur-sm
+  bg-white/80 backdrop-blur-sm
+  bg-slate-800/80 backdrop-blur-sm
+  ```
+
+- **Z-Index Scale:**
+  - `z-10` - Badges, overlays on cards
+  - `z-20` - Dropdowns, popovers
+  - `z-50` - Fixed headers, modals
+
+- **Responsive Utilities:**
+  ```tsx
+  // ✅ DO: Responsive patterns
+  // Padding
+  px-4 sm:px-6 lg:px-8
+  
+  // Text sizes
+  text-4xl sm:text-5xl lg:text-6xl
+  
+  // Grid columns
+  grid md:grid-cols-2 lg:grid-cols-3
+  
+  // Display
+  hidden md:flex
+  md:hidden
+  ```
+
+- **Button Styles:**
+  ```tsx
+  // ✅ DO: Primary button
+  className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
+  
+  // ✅ DO: Outline button
+  className="border border-gray-300 bg-white hover:bg-gray-50 text-slate-900 transition-colors duration-200"
+  
+  // ✅ DO: Full width button
+  className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-lg transition-colors duration-200"
+  ```
+
+- **Input Styles:**
+  ```tsx
+  // ✅ DO: Standard input
+  className="h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+  
+  // ✅ DO: Input with icon
+  className="pl-10 h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+  ```
+
+- **Card Styles:**
+  ```tsx
+  // ✅ DO: Standard card
+  className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-200"
+  
+  // ✅ DO: Interactive card
+  className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-gray-200"
+  ```

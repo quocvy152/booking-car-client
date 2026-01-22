@@ -1,0 +1,140 @@
+---
+description: Authentication patterns, context usage, and auth service integration
+globs: lib/auth/**/*.ts, lib/auth/**/*.tsx, components/**/*.tsx
+alwaysApply: true
+---
+
+- **Auth Context Pattern:**
+  - Use `AuthProvider` from `lib/auth/auth-context.tsx`
+  - Wrap app in `AuthProvider` in root layout
+  - Use `useAuth` hook to access auth state
+
+- **Using Auth:**
+  ```tsx
+  // ✅ DO: Use auth hook in components
+  'use client'
+  
+  import { useAuth } from '@/lib/auth/use-auth'
+  
+  export default function Component() {
+    const { 
+      user, 
+      isAuthenticated, 
+      isLoading, 
+      login, 
+      logout,
+      error 
+    } = useAuth()
+    
+    if (isLoading) return <div>Loading...</div>
+    
+    return (
+      <div>
+        {isAuthenticated ? (
+          <div>Welcome, {user?.name}</div>
+        ) : (
+          <button onClick={() => login(credentials)}>Login</button>
+        )}
+      </div>
+    )
+  }
+  ```
+
+- **Auth Service:**
+  - Auth logic in `lib/auth/auth-service.ts`
+  - Use localStorage for token storage
+  - Handle token expiration and validation
+  ```tsx
+  // ✅ DO: Auth service usage
+  import { login, register, logout } from '@/lib/auth/auth-service'
+  
+  const response = await login({ email, password })
+  // Response includes { token, user }
+  ```
+
+- **Protected Routes:**
+  - Check authentication status in page components
+  - Redirect unauthenticated users
+  ```tsx
+  // ✅ DO: Protected route pattern
+  'use client'
+  
+  import { useEffect } from 'react'
+  import { useRouter } from 'next/navigation'
+  import { useAuth } from '@/lib/auth/use-auth'
+  
+  export default function ProtectedPage() {
+    const router = useRouter()
+    const { isAuthenticated, isLoading } = useAuth()
+    
+    useEffect(() => {
+      if (!isLoading && !isAuthenticated) {
+        router.push('/dang-nhap')
+      }
+    }, [isAuthenticated, isLoading, router])
+    
+    if (isLoading) return <div>Loading...</div>
+    if (!isAuthenticated) return null
+    
+    return <div>Protected content</div>
+  }
+  ```
+
+- **Auth Types:**
+  - Use types from `lib/auth/types.ts`
+  ```tsx
+  // ✅ DO: Import auth types
+  import type { User, LoginCredentials, RegisterCredentials } from '@/lib/auth/types'
+  ```
+
+- **Error Handling:**
+  - Handle auth errors gracefully
+  - Display user-friendly error messages in Vietnamese
+  ```tsx
+  // ✅ DO: Error handling
+  try {
+    await login(credentials)
+  } catch (error) {
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : 'Đăng nhập thất bại'
+    // Display error to user
+  }
+  ```
+
+- **Login Modal Pattern:**
+  - Use `LoginModal` component for login/register
+  - Manage modal state in parent component
+  ```tsx
+  // ✅ DO: Login modal usage (see [Header.tsx](mdc:components/Header.tsx))
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
+  
+  <LoginModal 
+    isOpen={loginModalOpen} 
+    onClose={() => setLoginModalOpen(false)} 
+  />
+  ```
+
+- **User Profile:**
+  - Use `UserProfile` component to display user info
+  - Include logout functionality
+  ```tsx
+  // ✅ DO: User profile display
+  {isAuthenticated ? (
+    <UserProfile />
+  ) : (
+    <Button onClick={() => setLoginModalOpen(true)}>
+      Đăng nhập / Đăng ký
+    </Button>
+  )}
+  ```
+
+- **Token Storage:**
+  - Tokens stored in localStorage (handled by auth service)
+  - Keys: `auth_token`, `auth_user`
+  - Don't access localStorage directly - use auth service
+
+- **Auth Status:**
+  - Use `AuthStatus` type: `'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error'`
+  - Check `isLoading` before rendering auth-dependent content
+  - Use `isAuthenticated` boolean for conditional rendering

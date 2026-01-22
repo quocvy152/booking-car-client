@@ -1,0 +1,158 @@
+---
+description: API service patterns, error handling, and data fetching
+globs: lib/api/**/*.ts, lib/**/*.ts
+alwaysApply: true
+---
+
+- **API Service Structure:**
+  - Services in `lib/api/` directory
+  - One service per API endpoint/domain
+  - Central export in `lib/api/index.ts`
+  - Configuration in `lib/api/config.ts`
+
+- **Service Pattern:**
+  ```tsx
+  // ✅ DO: Service structure (see [nominatim.service.ts](mdc:lib/api/nominatim.service.ts))
+  import { API_CONFIG, buildNominatimUrl } from './config'
+  import { ApiError } from './types'
+  import type { NominatimSuggestion } from './types'
+  
+  export async function searchLocations(query: string): Promise<NominatimSuggestion[]> {
+    try {
+      const url = buildNominatimUrl({ q: query })
+      const response = await fetch(url, {
+        headers: API_HEADERS,
+      })
+      
+      if (!response.ok) {
+        throw new ApiError(`Failed to search locations: ${response.statusText}`, response.status)
+      }
+      
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('Error searching locations:', error)
+      throw error
+    }
+  }
+  ```
+
+- **Error Handling:**
+  - Use custom `ApiError` class for API errors
+  - Log errors appropriately
+  - Re-throw errors for component-level handling
+  ```tsx
+  // ✅ DO: Error handling
+  try {
+    const data = await fetchData()
+    return data
+  } catch (error) {
+    console.error('Error description:', error)
+    if (error instanceof ApiError) {
+      // Handle API-specific error
+      throw error
+    }
+    throw new ApiError('Unexpected error occurred')
+  }
+  ```
+
+- **API Configuration:**
+  - Centralize API config in `lib/api/config.ts`
+  - Use environment variables for API endpoints
+  - Define headers and request options consistently
+  ```tsx
+  // ✅ DO: API config (see [lib/api/config.ts](mdc:lib/api/config.ts))
+  export const API_CONFIG = {
+    NOMINATIM_BASE_URL: 'https://nominatim.openstreetmap.org',
+    OSRM_BASE_URL: 'https://router.projectosrm.org',
+  }
+  
+  export const API_HEADERS = {
+    'Accept': 'application/json',
+  }
+  ```
+
+- **Type Definitions:**
+  - Define types in `lib/api/types.ts`
+  - Export types for use in components
+  ```tsx
+  // ✅ DO: API types
+  export interface NominatimSuggestion {
+    place_id: number
+    display_name: string
+    lat: number
+    lon: number
+  }
+  
+  export interface RouteInfo {
+    distance: number // in meters
+    duration: number // in seconds
+  }
+  ```
+
+- **Data Fetching in Components:**
+  - Use `useEffect` for client-side data fetching
+  - Handle loading and error states
+  - Clean up async operations
+  ```tsx
+  // ✅ DO: Client-side data fetching (see [BookingForm.tsx](mdc:components/BookingForm.tsx))
+  useEffect(() => {
+    if (!query || query.trim().length < 3) {
+      setSuggestions([])
+      return
+    }
+    
+    let isCurrent = true
+    const controller = new AbortController()
+    
+    const timeoutId = setTimeout(async () => {
+      setIsLoading(true)
+      try {
+        const suggestions = await searchLocations(query)
+        if (isCurrent) {
+          setSuggestions(suggestions)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          console.error('Error:', error)
+        }
+      } finally {
+        if (isCurrent) {
+          setIsLoading(false)
+        }
+      }
+    }, 400) // Debounce
+    
+    return () => {
+      isCurrent = false
+      controller.abort()
+      clearTimeout(timeoutId)
+    }
+  }, [query])
+  ```
+
+- **Debouncing:**
+  - Debounce API calls for search/autocomplete
+  - Use 400-500ms delay for user input
+  - Clean up timeouts on unmount
+
+- **Service Exports:**
+  - Export all services from `lib/api/index.ts`
+  - Export types and error classes
+  ```tsx
+  // ✅ DO: Central exports (see [lib/api/index.ts](mdc:lib/api/index.ts))
+  export { searchLocations, reverseGeocode } from './nominatim.service'
+  export { calculateRoute, calculateRouteBetweenPoints } from './osrm.service'
+  export { ApiError } from './types'
+  export type { NominatimSuggestion, RouteInfo } from './types'
+  ```
+
+- **Async/Await:**
+  - Always use async/await over promises
+  - Handle errors with try-catch
+  - Return appropriate types from async functions
+
+- **Request Headers:**
+  - Use consistent headers across all API calls
+  - Include Accept headers for JSON responses
+  - Add authentication headers when needed

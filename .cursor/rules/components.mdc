@@ -1,0 +1,142 @@
+---
+description: Component patterns, structure, and styling guidelines
+globs: components/**/*.tsx
+alwaysApply: true
+---
+
+- **Component File Structure:**
+  - One component per file
+  - Use PascalCase for component names and file names
+  - Export default for main component
+  - Export types/interfaces if used externally
+
+- **Component Patterns:**
+  ```tsx
+  // ✅ DO: Standard component structure
+  'use client' // Only if needed (hooks, state, browser APIs)
+  
+  import { useState } from 'react'
+  import { Button } from '@/components/ui/button'
+  
+  interface ComponentProps {
+    title: string
+    optional?: boolean
+  }
+  
+  export default function ComponentName({ title, optional }: ComponentProps) {
+    const [state, setState] = useState('')
+    
+    return (
+      <div className="...">
+        {/* Component content */}
+      </div>
+    )
+  }
+  ```
+
+- **UI Component Pattern (shadcn/ui style):**
+  - UI components in `components/ui/` directory
+  - Use `forwardRef` for DOM ref forwarding
+  - Use `cn()` utility from `@/lib/utils` for className merging
+  - Extend HTML element props
+  ```tsx
+  // ✅ DO: UI component pattern (see [button.tsx](mdc:components/ui/button.tsx))
+  import * as React from "react"
+  import { cn } from "@/lib/utils"
+  
+  export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: "default" | "outline" | "ghost" | "link"
+  }
+  
+  const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, variant = "default", ...props }, ref) => {
+      return (
+        <button
+          className={cn(
+            "base-classes",
+            variant === "default" && "variant-classes",
+            className
+          )}
+          ref={ref}
+          {...props}
+        />
+      )
+    }
+  )
+  Button.displayName = "Button"
+  
+  export { Button }
+  ```
+
+- **Styling Guidelines:**
+  - Use Tailwind CSS utility classes
+  - Use `cn()` for conditional/merged classes
+  - Follow existing color scheme:
+    - Primary: `blue-600`, `blue-700` (hover)
+    - Background: `slate-50`, `blue-50`, `slate-100` (gradients)
+    - Text: `slate-900`, `slate-700`, `slate-600`
+    - Borders: `gray-200`, `gray-300`
+  
+  ```tsx
+  // ✅ DO: Consistent styling
+  className={cn(
+    "base-classes",
+    condition && "conditional-classes",
+    className // Allow override
+  )}
+  ```
+
+- **Responsive Design:**
+  - Mobile-first approach
+  - Use Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`
+  - Common patterns:
+    - `px-4 sm:px-6 lg:px-8` for horizontal padding
+    - `text-4xl sm:text-5xl lg:text-6xl` for responsive text
+    - `grid md:grid-cols-2 lg:grid-cols-3` for responsive grids
+
+- **Component Composition:**
+  - Break down complex components into smaller, reusable pieces
+  - Keep components focused on a single responsibility
+  - Use composition over configuration when possible
+
+- **Props Interface:**
+  ```tsx
+  // ✅ DO: Define clear interfaces
+  interface ComponentProps {
+    // Required props
+    title: string
+    // Optional props with defaults
+    variant?: 'primary' | 'secondary'
+    // Event handlers
+    onSubmit?: (data: FormData) => void
+    // Children
+    children?: React.ReactNode
+  }
+  ```
+
+- **Icons:**
+  - Use `lucide-react` for icons
+  - Import specific icons, not the entire library
+  ```tsx
+  // ✅ DO: Import specific icons
+  import { Menu, X, Search, MapPin } from 'lucide-react'
+  ```
+
+- **Accessibility:**
+  - Add `aria-label` for icon-only buttons
+  - Use semantic HTML elements
+  - Ensure keyboard navigation works
+  - Provide proper focus states
+
+- **Animation & Transitions:**
+  - Use Tailwind transition utilities: `transition-all duration-200`
+  - Common patterns:
+    - Hover effects: `hover:shadow-xl transition-shadow duration-200`
+    - Scale effects: `group-hover:scale-105 transition-transform duration-300`
+    - Color transitions: `transition-colors duration-200`
+
+- **Component Examples:**
+  - See [Header.tsx](mdc:components/Header.tsx) for navigation component
+  - See [CarCard.tsx](mdc:components/CarCard.tsx) for card component
+  - See [BookingForm.tsx](mdc:components/BookingForm.tsx) for form component

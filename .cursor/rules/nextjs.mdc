@@ -1,0 +1,125 @@
+---
+description: Next.js 14 App Router patterns and best practices for this project
+globs: app/**/*.tsx, app/**/*.ts, components/**/*.tsx
+alwaysApply: true
+---
+
+- **Next.js App Router Structure:**
+  - Use App Router (not Pages Router) - all routes in `app/` directory
+  - Server Components are default - only add `'use client'` when needed
+  - Use `page.tsx` for route pages, `layout.tsx` for layouts
+  - Export `metadata` object for SEO in Server Components
+
+- **Component Types:**
+  - **Server Components (Default):**
+    ```tsx
+    // ✅ DO: Server Component (default)
+    import Header from '@/components/Header'
+    import Footer from '@/components/Footer'
+    
+    export const metadata = {
+      title: 'Page Title - Tây Ninh Car',
+      description: 'Page description',
+    }
+    
+    export default function Page() {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
+          <Header />
+          <main className="flex-1 pt-24 pb-16">
+            {/* Content */}
+          </main>
+          <Footer />
+        </div>
+      )
+    }
+    ```
+
+  - **Client Components:**
+    ```tsx
+    // ✅ DO: Client Component (when using hooks, state, or browser APIs)
+    'use client'
+    
+    import { useState } from 'react'
+    import { useAuth } from '@/lib/auth/use-auth'
+    
+    export default function ClientComponent() {
+      const [state, setState] = useState('')
+      const { isAuthenticated } = useAuth()
+      // ...
+    }
+    ```
+
+- **Page Structure Pattern:**
+  - All pages should follow this structure:
+    ```tsx
+    // ✅ DO: Standard page structure
+    import Header from '@/components/Header'
+    import Footer from '@/components/Footer'
+    
+    export const metadata = {
+      title: 'Page Title - Tây Ninh Car',
+      description: 'Page description',
+    }
+    
+    export default function PageName() {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
+          <Header />
+          <main className="flex-1 pt-24 pb-16">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {/* Page content */}
+            </section>
+          </main>
+          <Footer />
+        </div>
+      )
+    }
+    ```
+
+- **Routing:**
+  - Use folder-based routing in `app/` directory
+  - Vietnamese route names are acceptable (e.g., `/dich-vu`, `/gioi-thieu`)
+  - Use `next/link` for internal navigation
+  - Use `next/navigation` hooks (`useRouter`, `usePathname`) in Client Components
+
+- **Metadata & SEO:**
+  ```tsx
+  // ✅ DO: Export metadata in Server Components
+  export const metadata = {
+    title: 'Page Title - Tây Ninh Car',
+    description: 'Page description for SEO',
+  }
+  ```
+
+- **Image Optimization:**
+  - Use `next/image` for all images
+  - Always provide `alt` text in Vietnamese
+  - Use `priority` for above-the-fold images
+  - Set appropriate `sizes` prop for responsive images
+  ```tsx
+  // ✅ DO: Next.js Image component
+  import Image from 'next/image'
+  
+  <Image
+    src="/logo.png"
+    alt="Tây Ninh Car"
+    width={120}
+    height={40}
+    className="h-8 w-auto sm:h-10 object-contain"
+    priority
+  />
+  ```
+
+- **Font Loading:**
+  - Use `next/font/google` for Google Fonts
+  - Font is already configured in [layout.tsx](mdc:app/layout.tsx) with Inter font including Vietnamese subset
+
+- **Path Aliases:**
+  - Use `@/` alias for imports (configured in tsconfig.json)
+  - Example: `import Header from '@/components/Header'`
+
+- **Error Handling:**
+  - Use error boundaries for error handling
+  - Handle API errors gracefully with try-catch blocks
+  - Show user-friendly error messages in Vietnamese

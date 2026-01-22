@@ -1,0 +1,115 @@
+---
+description: Project overview, structure, and quick reference guide for Tây Ninh Car booking platform
+globs: **/*
+alwaysApply: true
+---
+
+- **Project Overview:**
+  - **Name:** Tây Ninh Car - Đặt xe đi tỉnh, Sân bay giá rẻ
+  - **Framework:** Next.js 14+ (App Router)
+  - **Language:** TypeScript
+  - **Styling:** Tailwind CSS
+  - **UI Components:** Custom components (shadcn/ui style)
+  - **Icons:** Lucide React
+  - **Language:** Vietnamese
+
+- **Project Structure:**
+  ```
+  booking-car-client/
+  ├── app/                    # Next.js App Router pages
+  │   ├── layout.tsx          # Root layout with AuthProvider
+  │   ├── page.tsx            # Home page
+  │   ├── globals.css         # Global styles
+  │   └── [routes]/           # Route pages
+  ├── components/             # React components
+  │   ├── ui/                 # Reusable UI components
+  │   │   ├── button.tsx
+  │   │   ├── input.tsx
+  │   │   └── ...
+  │   ├── Header.tsx          # Navigation header
+  │   ├── Footer.tsx          # Footer component
+  │   ├── BookingForm.tsx     # Booking form
+  │   └── ...
+  ├── lib/                    # Utilities and services
+  │   ├── api/                # API services
+  │   │   ├── config.ts
+  │   │   ├── index.ts
+  │   │   ├── nominatim.service.ts
+  │   │   └── osrm.service.ts
+  │   ├── auth/               # Authentication
+  │   │   ├── auth-context.tsx
+  │   │   ├── auth-service.ts
+  │   │   ├── use-auth.ts
+  │   │   └── types.ts
+  │   └── utils.ts            # Utility functions (cn, etc.)
+  └── types/                  # TypeScript type definitions
+  ```
+
+- **Quick Reference:**
+  - **Next.js Patterns:** See [nextjs.mdc](mdc:.cursor/rules/nextjs.mdc)
+  - **Component Patterns:** See [components.mdc](mdc:.cursor/rules/components.mdc)
+  - **Styling Guidelines:** See [styling.mdc](mdc:.cursor/rules/styling.mdc)
+  - **TypeScript Patterns:** See [typescript.mdc](mdc:.cursor/rules/typescript.mdc)
+  - **API Services:** See [api-services.mdc](mdc:.cursor/rules/api-services.mdc)
+  - **Authentication:** See [authentication.mdc](mdc:.cursor/rules/authentication.mdc)
+  - **Vietnamese Support:** See [vietnamese.mdc](mdc:.cursor/rules/vietnamese.mdc)
+
+- **Key Patterns:**
+  - **Server Components by Default:** Only use `'use client'` when needed
+  - **Page Structure:** Header + Main + Footer with consistent styling
+  - **Color Scheme:** Blue primary (`blue-600`), slate neutrals
+  - **Responsive:** Mobile-first with Tailwind breakpoints
+  - **Vietnamese:** All user-facing text in Vietnamese
+  - **Type Safety:** Strict TypeScript with proper interfaces
+
+- **Common Tasks:**
+  - **Creating a New Page:**
+    1. Create `app/[route]/page.tsx`
+    2. Import Header and Footer
+    3. Export metadata
+    4. Use standard page structure
+    5. See [nextjs.mdc](mdc:.cursor/rules/nextjs.mdc) for details
+
+  - **Creating a New Component:**
+    1. Create file in `components/` or `components/ui/`
+    2. Add `'use client'` if using hooks/state
+    3. Define TypeScript interface for props
+    4. Use Tailwind classes with `cn()` utility
+    5. See [components.mdc](mdc:.cursor/rules/components.mdc) for details
+
+  - **Adding API Service:**
+    1. Create service file in `lib/api/`
+    2. Define types in `lib/api/types.ts`
+    3. Export from `lib/api/index.ts`
+    4. Use ApiError for error handling
+    5. See [api-services.mdc](mdc:.cursor/rules/api-services.mdc) for details
+
+- **Dependencies:**
+  - `next`: 14.2.0
+  - `react`: 18.3.0
+  - `typescript`: 5.3.0
+  - `tailwindcss`: 3.4.0
+  - `lucide-react`: 0.344.0
+  - `clsx`: 2.1.0
+  - `tailwind-merge`: 2.2.0
+
+- **Path Aliases:**
+  - `@/` maps to project root
+  - Use `@/components`, `@/lib`, `@/app` for imports
+
+- **Code Style:**
+  - Use functional components
+  - Prefer named exports for utilities, default exports for components
+  - Use TypeScript interfaces for props
+  - Follow existing naming conventions
+  - Use Vietnamese for all user-facing text
+
+- **Best Practices:**
+  - Always use TypeScript types
+  - Handle errors gracefully
+  - Use semantic HTML
+  - Ensure accessibility (aria-labels, keyboard navigation)
+  - Optimize images with next/image
+  - Use proper SEO metadata
+  - Follow responsive design principles
+  - Maintain consistent styling patterns
