@@ -72,6 +72,8 @@ booking-car/
 
 ```bash
 npm run build
+# or
+yarn build
 ```
 
 ## License
