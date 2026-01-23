@@ -36,5 +36,6 @@ next-env.d.ts
 
 # Ignore UI/UX promax tools
 .shared
+.cursor/commands/ui-ux-pro-max.md
 
 .env
