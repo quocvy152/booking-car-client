@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
-import { Clock, Calendar, Navigation, MapPin, Route } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import DateRangePicker, { DateRange } from './DateRangePicker'
-import { searchLocations, calculateRouteBetweenPoints, ApiError } from '@/lib/api'
-import type { NominatimSuggestion, RouteInfo } from '@/lib/api'
+import { useLocationAutocomplete } from '@/lib/hooks/useLocationAutocomplete'
+import { useRouteCalculation } from '@/lib/hooks/useRouteCalculation'
 import type { CarDetail } from '@/types/car'
+import { Clock, MapPin, Navigation, Route } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import DateRangePicker, { DateRange } from './DateRangePicker'
 
 interface CarRentalFormProps {
   car: CarDetail
@@ -19,24 +19,17 @@ export default function CarRentalForm({ car }: CarRentalFormProps) {
   const [pickupTime, setPickupTime] = useState<string>('08:00')
   const [returnTime, setReturnTime] = useState<string>('18:00')
 
-  // Location states
-  const [pickupLocation, setPickupLocation] = useState('')
-  const [dropoffLocation, setDropoffLocation] = useState('')
-  const [pickupSuggestions, setPickupSuggestions] = useState<NominatimSuggestion[]>([])
-  const [dropoffSuggestions, setDropoffSuggestions] = useState<NominatimSuggestion[]>([])
-  const [isPickupLoading, setIsPickupLoading] = useState(false)
-  const [isDropoffLoading, setIsDropoffLoading] = useState(false)
-  const [hasPickupSearched, setHasPickupSearched] = useState(false)
-  const [hasDropoffSearched, setHasDropoffSearched] = useState(false)
-
-  // Coordinates for route calculation
-  const [pickupCoord, setPickupCoord] = useState<{ lat: number; lon: number } | null>(null)
-  const [dropoffCoord, setDropoffCoord] = useState<{ lat: number; lon: number } | null>(null)
-  const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null)
-  const [isRouteLoading, setIsRouteLoading] = useState(false)
-  const [routeError, setRouteError] = useState<string | null>(null)
-
   const TIME_DELAY = 3600
+
+  // Use location autocomplete hooks
+  const pickupLocation = useLocationAutocomplete()
+  const dropoffLocation = useLocationAutocomplete()
+
+  // Use route calculation hook
+  const { routeInfo, isLoading: isRouteLoading, error: routeError } = useRouteCalculation({
+    pickupCoord: pickupLocation.coordinates,
+    dropoffCoord: dropoffLocation.coordinates,
+  })
 
   // Generate time options (every hour from 00:00 to 23:00)
   const timeOptions = useMemo(() => {
@@ -47,112 +40,6 @@ export default function CarRentalForm({ car }: CarRentalFormProps) {
     }
     return times
   }, [])
-
-  const fetchSuggestions = async (query: string): Promise<NominatimSuggestion[]> => {
-    try {
-      return await searchLocations(query)
-    } catch (error) {
-      // Error is already logged in the service
-      // Return empty array to prevent UI breakage
-      return []
-    }
-  }
-
-  // Fetch pickup location suggestions
-  useEffect(() => {
-    if (!pickupLocation || pickupLocation.trim().length < 3) {
-      setPickupSuggestions([])
-      setHasPickupSearched(false)
-      return
-    }
-
-    let isCurrent = true
-    const controller = new AbortController()
-
-    const timeoutId = window.setTimeout(async () => {
-      setIsPickupLoading(true)
-      const suggestions = await fetchSuggestions(pickupLocation)
-      if (isCurrent) {
-        setPickupSuggestions(suggestions)
-        setIsPickupLoading(false)
-        setHasPickupSearched(true)
-      }
-    }, 400)
-
-    return () => {
-      isCurrent = false
-      controller.abort()
-      window.clearTimeout(timeoutId)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickupLocation])
-
-  // Fetch dropoff location suggestions
-  useEffect(() => {
-    if (!dropoffLocation || dropoffLocation.trim().length < 3) {
-      setDropoffSuggestions([])
-      setHasDropoffSearched(false)
-      return
-    }
-
-    let isCurrent = true
-    const controller = new AbortController()
-
-    const timeoutId = window.setTimeout(async () => {
-      setIsDropoffLoading(true)
-      const suggestions = await fetchSuggestions(dropoffLocation)
-      if (isCurrent) {
-        setDropoffSuggestions(suggestions)
-        setIsDropoffLoading(false)
-        setHasDropoffSearched(true)
-      }
-    }, 400)
-
-    return () => {
-      isCurrent = false
-      controller.abort()
-      window.clearTimeout(timeoutId)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dropoffLocation])
-
-  // Fetch route information from OSRM when both coordinates are available
-  useEffect(() => {
-    const fetchRoute = async () => {
-      if (!pickupCoord || !dropoffCoord) {
-        setRouteInfo(null)
-        setRouteError(null)
-        return
-      }
-
-      setIsRouteLoading(true)
-      setRouteError(null)
-
-      try {
-        const route = await calculateRouteBetweenPoints(pickupCoord, dropoffCoord)
-        setRouteInfo(route)
-      } catch (error) {
-        // Error is already logged in the service
-        if (error && typeof error === 'object' && 'name' in error && error.name === 'ApiError') {
-          setRouteError((error as Error).message)
-        } else if (error instanceof Error) {
-          setRouteError(error.message)
-        } else {
-          setRouteError('Lỗi kết nối khi tính toán đường đi')
-        }
-        setRouteInfo(null)
-      } finally {
-        setIsRouteLoading(false)
-      }
-    }
-
-    // Debounce route fetching
-    const timeoutId = setTimeout(() => {
-      fetchRoute()
-    }, 500)
-
-    return () => clearTimeout(timeoutId)
-  }, [pickupCoord, dropoffCoord])
 
   // Calculate rental details
   const rentalDetails = useMemo(() => {
@@ -232,48 +119,38 @@ export default function CarRentalForm({ car }: CarRentalFormProps) {
             id="pickup"
             type="text"
             placeholder="Nhập điểm đón"
-            value={pickupLocation}
-            onChange={(e) => {
-              setPickupLocation(e.target.value)
-              setPickupCoord(null)
-              setRouteInfo(null)
-            }}
-            onBlur={() => {
-              // Trì hoãn một chút để cho phép click chọn suggestion
-              setTimeout(() => {
-                setPickupSuggestions([])
-                setHasPickupSearched(false)
-              }, 150)
-            }}
+            value={pickupLocation.value}
+            onChange={pickupLocation.handleChange}
+            onBlur={pickupLocation.handleBlur}
             className="pl-10 h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           />
-          {pickupLocation && pickupLocation.trim().length >= 3 && !isPickupLoading && (pickupSuggestions.length > 0 || hasPickupSearched) && (
-            <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-64 overflow-y-auto">
-              {pickupSuggestions.length > 0 ? (
-                pickupSuggestions.map((suggestion) => (
-                  <button
-                    type="button"
-                    key={suggestion.place_id}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
-                    onMouseDown={(e) => {
-                      e.preventDefault()
-                      setPickupLocation(suggestion.display_name)
-                      setPickupCoord({ lat: suggestion.lat, lon: suggestion.lon })
-                      setPickupSuggestions([])
-                      setHasPickupSearched(false)
-                    }}
-                  >
-                    {suggestion.display_name}
-                  </button>
-                ))
-              ) : hasPickupSearched ? (
-                <div className="px-3 py-2 text-sm text-slate-500 text-center">
-                  Không tìm thấy địa chỉ
-                </div>
-              ) : null}
-            </div>
-          )}
-          {isPickupLoading && (
+          {pickupLocation.value &&
+            pickupLocation.value.trim().length >= 3 &&
+            !pickupLocation.isLoading &&
+            (pickupLocation.suggestions.length > 0 || pickupLocation.hasSearched) && (
+              <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-64 overflow-y-auto">
+                {pickupLocation.suggestions.length > 0 ? (
+                  pickupLocation.suggestions.map((suggestion) => (
+                    <button
+                      type="button"
+                      key={suggestion.place_id}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        pickupLocation.handleSelect(suggestion)
+                      }}
+                    >
+                      {suggestion.display_name}
+                    </button>
+                  ))
+                ) : pickupLocation.hasSearched ? (
+                  <div className="px-3 py-2 text-sm text-slate-500 text-center">
+                    Không tìm thấy địa chỉ
+                  </div>
+                ) : null}
+              </div>
+            )}
+          {pickupLocation.isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
               Đang tìm...
             </div>
@@ -292,47 +169,38 @@ export default function CarRentalForm({ car }: CarRentalFormProps) {
             id="dropoff"
             type="text"
             placeholder="Nhập điểm đến"
-            value={dropoffLocation}
-            onChange={(e) => {
-              setDropoffLocation(e.target.value)
-              setDropoffCoord(null)
-              setRouteInfo(null)
-            }}
-            onBlur={() => {
-              setTimeout(() => {
-                setDropoffSuggestions([])
-                setHasDropoffSearched(false)
-              }, 150)
-            }}
+            value={dropoffLocation.value}
+            onChange={dropoffLocation.handleChange}
+            onBlur={dropoffLocation.handleBlur}
             className="pl-10 h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           />
-          {dropoffLocation && dropoffLocation.trim().length >= 3 && !isDropoffLoading && (dropoffSuggestions.length > 0 || hasDropoffSearched) && (
-            <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-64 overflow-y-auto">
-              {dropoffSuggestions.length > 0 ? (
-                dropoffSuggestions.map((suggestion) => (
-                  <button
-                    type="button"
-                    key={suggestion.place_id}
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
-                    onMouseDown={(e) => {
-                      e.preventDefault()
-                      setDropoffLocation(suggestion.display_name)
-                      setDropoffCoord({ lat: suggestion.lat, lon: suggestion.lon })
-                      setDropoffSuggestions([])
-                      setHasDropoffSearched(false)
-                    }}
-                  >
-                    {suggestion.display_name}
-                  </button>
-                ))
-              ) : hasDropoffSearched ? (
-                <div className="px-3 py-2 text-sm text-slate-500 text-center">
-                  Không tìm thấy địa chỉ
-                </div>
-              ) : null}
-            </div>
-          )}
-          {isDropoffLoading && (
+          {dropoffLocation.value &&
+            dropoffLocation.value.trim().length >= 3 &&
+            !dropoffLocation.isLoading &&
+            (dropoffLocation.suggestions.length > 0 || dropoffLocation.hasSearched) && (
+              <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg max-h-64 overflow-y-auto">
+                {dropoffLocation.suggestions.length > 0 ? (
+                  dropoffLocation.suggestions.map((suggestion) => (
+                    <button
+                      type="button"
+                      key={suggestion.place_id}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
+                      onMouseDown={(e) => {
+                        e.preventDefault()
+                        dropoffLocation.handleSelect(suggestion)
+                      }}
+                    >
+                      {suggestion.display_name}
+                    </button>
+                  ))
+                ) : dropoffLocation.hasSearched ? (
+                  <div className="px-3 py-2 text-sm text-slate-500 text-center">
+                    Không tìm thấy địa chỉ
+                  </div>
+                ) : null}
+              </div>
+            )}
+          {dropoffLocation.isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400">
               Đang tìm...
             </div>
@@ -341,7 +209,7 @@ export default function CarRentalForm({ car }: CarRentalFormProps) {
       </div>
 
       {/* Route Information */}
-      {pickupCoord && dropoffCoord && (
+      {pickupLocation.coordinates && dropoffLocation.coordinates && (
         <div className="space-y-2 mb-6">
           <div className="rounded-lg border border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 shadow-sm">
             {isRouteLoading ? (
