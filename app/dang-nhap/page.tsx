@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus, AlertCircle } from 'lucide-react'
 import { useAuth } from '@/lib/auth/use-auth'
+import { AlertCircle, Eye, EyeOff, Lock, LogIn, Mail, Phone, User, UserPlus } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -87,9 +86,7 @@ export default function LoginPage() {
   const displayError = localError || error
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <PageLayout mainClassName="flex-1 pt-24 pb-16 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
           {/* Card Container */}
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 p-8 md:p-10">
@@ -426,9 +423,7 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import Link from 'next/link'
 import { 
   Users, 
@@ -98,9 +97,7 @@ const faqs = [
 
 export default function WithDriverServicePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-slate-50 to-orange-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout className="min-h-screen bg-gradient-to-br from-orange-50 via-slate-50 to-orange-100 flex flex-col">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-orange-600 to-orange-700 text-white">
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
@@ -332,9 +329,7 @@ export default function WithDriverServicePage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

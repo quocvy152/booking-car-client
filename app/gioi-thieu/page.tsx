@@ -1,15 +1,14 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import StatsSection from '@/components/StatsSection'
-import { 
-  Shield, 
-  Clock, 
-  Users, 
-  Award, 
-  MapPin, 
-  Car,
-  CheckCircle2,
-  Star
+import {
+    Award,
+    Car,
+    CheckCircle2,
+    Clock,
+    MapPin,
+    Shield,
+    Star,
+    Users
 } from 'lucide-react'
 
 export const metadata = {
@@ -19,9 +18,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout>
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="text-center mb-12">
@@ -265,9 +262,7 @@ export default function AboutPage() {
 
         {/* Stats Section */}
         <StatsSection />
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

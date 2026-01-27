@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import Link from 'next/link'
 import { 
   MapPin, 
@@ -75,9 +74,7 @@ const faqs = [
 
 export default function IntercityServicePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-slate-50 to-green-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout className="min-h-screen bg-gradient-to-br from-green-50 via-slate-50 to-green-100 flex flex-col">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 text-white">
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
@@ -287,9 +284,7 @@ export default function IntercityServicePage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

@@ -1,8 +1,7 @@
 'use client'
 
 import CarCard from '@/components/CarCard'
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
+import PageLayout from '@/components/PageLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PriceRangeSlider } from '@/components/ui/price-range-slider'
@@ -72,9 +71,7 @@ export default function CarListingsPage() {
     priceRange[1] !== PRICE_MAX
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-20 pb-12">
+    <PageLayout mainClassName="flex-1 pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Page Header */}
           <div className="mb-8">
@@ -329,9 +326,7 @@ export default function CarListingsPage() {
             </div>
           )}
         </div>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

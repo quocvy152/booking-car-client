@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import Link from 'next/link'
 import { 
   Car, 
@@ -56,9 +55,7 @@ const carTypes = [
 
 export default function SelfDriveServicePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-slate-50 to-red-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout className="min-h-screen bg-gradient-to-br from-red-50 via-slate-50 to-red-100 flex flex-col">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-red-600 to-red-700 text-white">
           <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
@@ -275,9 +272,7 @@ export default function SelfDriveServicePage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

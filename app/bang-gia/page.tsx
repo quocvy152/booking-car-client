@@ -1,16 +1,15 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Link from 'next/link'
-import { 
-  Car, 
-  Users, 
-  CheckCircle2,
-  Info,
-  ArrowRight,
-  Phone,
-  MessageCircle
-} from 'lucide-react'
+import PageLayout from '@/components/PageLayout'
 import { Button } from '@/components/ui/button'
+import {
+    ArrowRight,
+    Car,
+    CheckCircle2,
+    Info,
+    MessageCircle,
+    Phone,
+    Users
+} from 'lucide-react'
+import Link from 'next/link'
 
 export const metadata = {
   title: 'Bảng Giá - Tây Ninh Car',
@@ -62,9 +61,7 @@ const pricingPlans = [
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout>
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="text-center mb-12">
@@ -286,9 +283,7 @@ export default function PricingPage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 

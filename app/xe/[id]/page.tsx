@@ -1,8 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import PageLayout from '@/components/PageLayout'
 import CarImageGallery from '@/components/CarImageGallery'
 import CarFeatures from '@/components/CarFeatures'
 import CarAmenities from '@/components/CarAmenities'
@@ -181,9 +180,7 @@ export default function CarDetailPage() {
 
   if (!car) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-        <Header />
-        <main className="flex-1 pt-24 pb-16">
+      <PageLayout>
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center py-16">
               <h1 className="text-2xl font-bold text-slate-900 mb-4">
@@ -194,16 +191,12 @@ export default function CarDetailPage() {
               </p>
             </div>
           </section>
-        </main>
-        <Footer />
-      </div>
+      </PageLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex flex-col">
-      <Header />
-      <main className="flex-1 pt-24 pb-16">
+    <PageLayout>
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Car Header Info */}
           <div className="mb-6">
@@ -317,9 +310,7 @@ export default function CarDetailPage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+    </PageLayout>
   )
 }
 
