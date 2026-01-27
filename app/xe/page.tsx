@@ -12,6 +12,10 @@ import { useMemo, useState } from 'react'
 
 const ITEMS_PER_PAGE = 10
 
+// Note: Metadata cannot be exported from Client Components
+// This page needs to be refactored to use Server Component wrapper if metadata is required
+// For now, metadata is handled via layout or will be added when converting to Server Component
+
 export default function CarListingsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [transmissionFilter, setTransmissionFilter] = useState<string>('all')

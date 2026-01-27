@@ -1,13 +1,14 @@
 'use client'
 
+import NavigationLinks from '@/components/NavigationLinks'
 import { Button } from '@/components/ui/button'
 import UserProfile from '@/components/UserProfile'
 import { useAuth } from '@/lib/auth/use-auth'
+import { mainNavigationItems } from '@/lib/config/navigation'
 import { Menu, X } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
 
 // Lazy load LoginModal only when needed
@@ -18,7 +19,6 @@ const LoginModal = dynamic(() => import('@/components/LoginModal'), {
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
-  const pathname = usePathname()
   const { isAuthenticated } = useAuth()
 
   const toggleMobileMenu = useCallback(() => {
@@ -60,66 +60,10 @@ function Header() {
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-1">
-            <Link 
-              href="/" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Trang chủ
-            </Link>
-            <Link 
-              href="/gioi-thieu" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/gioi-thieu' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Giới thiệu
-            </Link>
-            <Link 
-              href="/dich-vu" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/dich-vu' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Dịch vụ
-            </Link>
-            <Link 
-              href="/xe" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/xe' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Danh sách xe
-            </Link>
-            {/* <Link 
-              href="/bang-gia" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/bang-gia' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Bảng giá
-            </Link> */}
-            <Link 
-              href="/lien-he" 
-              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/lien-he' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-            >
-              Liên hệ
-            </Link>
+            <NavigationLinks
+              items={mainNavigationItems}
+              variant="desktop"
+            />
           </div>
 
           {/* Desktop Login/Register Button or User Profile */}
@@ -154,72 +98,11 @@ function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 space-y-1 border-t border-gray-200 mt-2 pt-4">
-            <Link 
-              href="/" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Trang chủ
-            </Link>
-            <Link 
-              href="/gioi-thieu" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/gioi-thieu' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Giới thiệu
-            </Link>
-            <Link 
-              href="/dich-vu" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/dich-vu' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Dịch vụ
-            </Link>
-            <Link 
-              href="/xe" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/xe' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Danh sách xe
-            </Link>
-            {/* <Link 
-              href="/bang-gia" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/bang-gia' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Bảng giá
-            </Link> */}
-            <Link 
-              href="/lien-he" 
-              className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${
-                pathname === '/lien-he' 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
-              }`}
-              onClick={closeMobileMenu}
-            >
-              Liên hệ
-            </Link>
+            <NavigationLinks
+              items={mainNavigationItems}
+              variant="mobile"
+              onItemClick={closeMobileMenu}
+            />
             {isAuthenticated ? (
               <div className="mt-2">
                 <UserProfile />

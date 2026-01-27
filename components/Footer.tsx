@@ -1,5 +1,7 @@
 'use client'
 
+import NavigationLinks from '@/components/NavigationLinks'
+import { footerQuickLinks, footerServiceLinks, footerLegalLinks } from '@/lib/config/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { 
@@ -85,48 +87,10 @@ export default function Footer() {
             <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
               Liên kết nhanh
             </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link 
-                  href="/" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Trang chủ
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/gioi-thieu" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Giới thiệu
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/dich-vu" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Dịch vụ
-                </Link>
-              </li>
-              {/* <li>
-                <Link 
-                  href="/bang-gia" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Bảng giá
-                </Link>
-              </li> */}
-              <li>
-                <Link 
-                  href="/lien-he" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Liên hệ
-                </Link>
-              </li>
-            </ul>
+            <NavigationLinks
+              items={footerQuickLinks}
+              variant="footer"
+            />
           </div>
 
           {/* Services */}
@@ -134,24 +98,10 @@ export default function Footer() {
             <h3 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
               Dịch vụ
             </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link 
-                  href="/dich-vu/thue-xe-tu-lai" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Thuê xe tự lái
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/dich-vu/thue-xe-co-tai-xe" 
-                  className="text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer text-sm"
-                >
-                  Thuê xe có tài xế
-                </Link>
-              </li>
-            </ul>
+            <NavigationLinks
+              items={footerServiceLinks}
+              variant="footer"
+            />
           </div>
 
           {/* Contact Info */}
@@ -212,24 +162,15 @@ export default function Footer() {
             
             {/* Legal Links */}
             <div className="flex flex-wrap items-center justify-center md:justify-end gap-4 md:gap-6">
-              <Link 
-                href="/chinh-sach-bao-mat" 
-                className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Chính sách bảo mật
-              </Link>
-              <Link 
-                href="/dieu-khoan" 
-                className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Điều khoản sử dụng
-              </Link>
-              <Link 
-                href="/hoan-tien" 
-                className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
-              >
-                Chính sách hoàn tiền
-              </Link>
+              {footerLegalLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
