@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MapPin, Navigation, Route, Clock } from 'lucide-react'
+import DatePickerPopover from '@/components/DatePickerPopover'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import DatePickerPopover from '@/components/DatePickerPopover'
-import { searchLocations, calculateRouteBetweenPoints, ApiError } from '@/lib/api'
 import type { NominatimSuggestion, RouteInfo } from '@/lib/api'
+import { calculateRouteBetweenPoints, searchLocations } from '@/lib/api'
+import { Clock, MapPin, Navigation, Route } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function BookingForm() {
   const [pickupLocation, setPickupLocation] = useState('')
@@ -135,14 +135,14 @@ export default function BookingForm() {
     return () => clearTimeout(timeoutId)
   }, [pickupCoord, dropoffCoord])
 
-  const formatDistance = (meters: number): string => {
+  const formatDistance = useCallback((meters: number): string => {
     if (meters >= 1000) {
       return `${(meters / 1000).toFixed(1)} km`
     }
     return `${Math.round(meters)} m`
-  }
+  }, [])
 
-  const formatDuration = (seconds: number): string => {
+  const formatDuration = useCallback((seconds: number): string => {
     const totalMinutes = Math.floor(seconds / 60)
     const hours = Math.floor(totalMinutes / 60)
     const minutes = totalMinutes % 60
@@ -151,13 +151,54 @@ export default function BookingForm() {
       return `${hours} giờ ${minutes} phút`
     }
     return `${minutes} phút`
-  }
+  }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission
     console.log({ pickupLocation, dropoffLocation, date, carType })
-  }
+  }, [pickupLocation, dropoffLocation, date, carType])
+
+  const handlePickupChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPickupLocation(e.target.value)
+    setPickupCoord(null)
+    setRouteInfo(null)
+  }, [])
+
+  const handlePickupBlur = useCallback(() => {
+    // Trì hoãn một chút để cho phép click chọn suggestion
+    setTimeout(() => {
+      setPickupSuggestions([])
+      setHasPickupSearched(false)
+    }, 150)
+  }, [])
+
+  const handlePickupSelect = useCallback((suggestion: NominatimSuggestion) => {
+    setPickupLocation(suggestion.display_name)
+    setPickupCoord({ lat: suggestion.lat, lon: suggestion.lon })
+    setPickupSuggestions([])
+    setHasPickupSearched(false)
+  }, [])
+
+  const handleDropoffChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setDropoffLocation(e.target.value)
+    setDropoffCoord(null)
+    setRouteInfo(null)
+  }, [])
+
+  const handleDropoffBlur = useCallback(() => {
+    setTimeout(() => {
+      setDropoffSuggestions([])
+      setHasDropoffSearched(false)
+    }, 150)
+  }, [])
+
+  const handleDropoffSelect = useCallback((suggestion: NominatimSuggestion) => {
+    setDropoffLocation(suggestion.display_name)
+    setDropoffCoord({ lat: suggestion.lat, lon: suggestion.lon })
+    setDropoffSuggestions([])
+    setHasDropoffSearched(false)
+  }, [])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -173,18 +214,8 @@ export default function BookingForm() {
             type="text"
             placeholder="Nhập điểm đón"
             value={pickupLocation}
-            onChange={(e) => {
-              setPickupLocation(e.target.value)
-              setPickupCoord(null)
-              setRouteInfo(null)
-            }}
-            onBlur={() => {
-              // Trì hoãn một chút để cho phép click chọn suggestion
-              setTimeout(() => {
-                setPickupSuggestions([])
-                setHasPickupSearched(false)
-              }, 150)
-            }}
+            onChange={handlePickupChange}
+            onBlur={handlePickupBlur}
             className="pl-10 h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
             required
           />
@@ -198,10 +229,7 @@ export default function BookingForm() {
                     className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
                     onMouseDown={(e) => {
                       e.preventDefault()
-                      setPickupLocation(suggestion.display_name)
-                      setPickupCoord({ lat: suggestion.lat, lon: suggestion.lon })
-                      setPickupSuggestions([])
-                      setHasPickupSearched(false)
+                      handlePickupSelect(suggestion)
                     }}
                   >
                     {suggestion.display_name}
@@ -234,17 +262,8 @@ export default function BookingForm() {
             type="text"
             placeholder="Nhập điểm đến"
             value={dropoffLocation}
-            onChange={(e) => {
-              setDropoffLocation(e.target.value)
-              setDropoffCoord(null)
-              setRouteInfo(null)
-            }}
-            onBlur={() => {
-              setTimeout(() => {
-                setDropoffSuggestions([])
-                setHasDropoffSearched(false)
-              }, 150)
-            }}
+            onChange={handleDropoffChange}
+            onBlur={handleDropoffBlur}
             className="pl-10 h-12 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
             required
           />
@@ -258,10 +277,7 @@ export default function BookingForm() {
                     className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer"
                     onMouseDown={(e) => {
                       e.preventDefault()
-                      setDropoffLocation(suggestion.display_name)
-                      setDropoffCoord({ lat: suggestion.lat, lon: suggestion.lon })
-                      setDropoffSuggestions([])
-                      setHasDropoffSearched(false)
+                      handleDropoffSelect(suggestion)
                     }}
                   >
                     {suggestion.display_name}

@@ -1,9 +1,10 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
+import { Fuel, Gauge, Heart, MapPin, Star, Users, Zap } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, MapPin, Zap, Users, Fuel, Gauge, Heart } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import React from 'react'
 
 export interface Car {
   id: string
@@ -30,7 +31,7 @@ interface CarCardProps {
   car: Car
 }
 
-export default function CarCard({ car }: CarCardProps) {
+function CarCard({ car }: CarCardProps) {
   const transmissionText = car.transmission === 'automatic' ? 'Số tự động' : 'Số sàn'
   const fuelText = car.fuel === 'gasoline' ? 'Xăng' : car.fuel === 'diesel' ? 'Dầu' : 'Điện'
 
@@ -164,3 +165,4 @@ export default function CarCard({ car }: CarCardProps) {
   )
 }
 
+export default React.memo(CarCard)

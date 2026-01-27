@@ -1,20 +1,46 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import LoginModal from '@/components/LoginModal'
 import UserProfile from '@/components/UserProfile'
 import { useAuth } from '@/lib/auth/use-auth'
+import { Menu, X } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React, { useCallback, useState } from 'react'
 
-export default function Header() {
+// Lazy load LoginModal only when needed
+const LoginModal = dynamic(() => import('@/components/LoginModal'), {
+  ssr: false, // Modal components typically don't need SSR
+})
+
+function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [loginModalOpen, setLoginModalOpen] = useState(false)
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
+
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen((prev) => !prev)
+  }, [])
+
+  const openLoginModal = useCallback(() => {
+    setLoginModalOpen(true)
+  }, [])
+
+  const closeLoginModal = useCallback(() => {
+    setLoginModalOpen(false)
+  }, [])
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false)
+  }, [])
+
+  const handleMobileLoginClick = useCallback(() => {
+    setMobileMenuOpen(false)
+    setLoginModalOpen(true)
+  }, [])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -103,7 +129,7 @@ export default function Header() {
             ) : (
               <Button 
                 variant="default" 
-                onClick={() => setLoginModalOpen(true)}
+                onClick={openLoginModal}
                 className="bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer px-6 py-2.5"
               >
                 Đăng nhập / Đăng ký
@@ -113,7 +139,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={toggleMobileMenu}
             className="md:hidden p-2 text-slate-700 hover:text-slate-900 transition-colors duration-200 cursor-pointer"
             aria-label="Toggle menu"
           >
@@ -135,7 +161,7 @@ export default function Header() {
                   ? 'text-blue-600 bg-blue-50' 
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Trang chủ
             </Link>
@@ -146,7 +172,7 @@ export default function Header() {
                   ? 'text-blue-600 bg-blue-50' 
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Giới thiệu
             </Link>
@@ -157,7 +183,7 @@ export default function Header() {
                   ? 'text-blue-600 bg-blue-50' 
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Dịch vụ
             </Link>
@@ -168,7 +194,7 @@ export default function Header() {
                   ? 'text-blue-600 bg-blue-50' 
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Danh sách xe
             </Link>
@@ -190,7 +216,7 @@ export default function Header() {
                   ? 'text-blue-600 bg-blue-50' 
                   : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50'
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
             >
               Liên hệ
             </Link>
@@ -201,10 +227,7 @@ export default function Header() {
             ) : (
               <Button 
                 variant="default" 
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  setLoginModalOpen(true)
-                }}
+                onClick={handleMobileLoginClick}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 cursor-pointer mt-2 px-6 py-2.5"
               >
                 Đăng nhập / Đăng ký
@@ -215,8 +238,10 @@ export default function Header() {
       </nav>
 
       {/* Login Modal */}
-      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
+      <LoginModal isOpen={loginModalOpen} onClose={closeLoginModal} />
     </header>
   )
 }
+
+export default React.memo(Header)
 

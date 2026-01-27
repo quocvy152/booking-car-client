@@ -5,10 +5,10 @@
  * Provides authentication state and methods throughout the application
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
-import type { User, LoginCredentials, RegisterCredentials, AuthStatus } from './types'
-import { login as loginService, register as registerService, logout as logoutService, getCurrentUser } from './auth-service'
+import { usePathname, useRouter } from 'next/navigation'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { login as loginService, logout as logoutService, register as registerService } from './auth-service'
+import type { AuthStatus, LoginCredentials, RegisterCredentials, User } from './types'
 
 interface AuthContextType {
   user: User | null
@@ -161,17 +161,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setError(null)
   }, [])
 
-  const value: AuthContextType = {
-    user,
-    status,
-    isLoading,
-    isAuthenticated,
-    login: handleLogin,
-    register: handleRegister,
-    logout: handleLogout,
-    error,
-    clearError,
-  }
+  const value: AuthContextType = useMemo(
+    () => ({
+      user,
+      status,
+      isLoading,
+      isAuthenticated,
+      login: handleLogin,
+      register: handleRegister,
+      logout: handleLogout,
+      error,
+      clearError,
+    }),
+    [user, status, isLoading, isAuthenticated, handleLogin, handleRegister, handleLogout, error, clearError]
+  )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Mail, Lock, User, Phone, Eye, EyeOff, LogIn, UserPlus, X, AlertCircle } from 'lucide-react'
 import { useAuth } from '@/lib/auth/use-auth'
+import { AlertCircle, Eye, EyeOff, Lock, LogIn, Mail, Phone, User, UserPlus, X } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -78,17 +78,18 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   }, [isOpen])
 
   // Handle escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose()
-      }
+  const handleEscape = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isOpen) {
+      onClose()
     }
-    window.addEventListener('keydown', handleEscape)
-    return () => window.removeEventListener('keydown', handleEscape)
   }, [isOpen, onClose])
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [handleEscape])
+
+  const handleLoginSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     setLocalError(null)
     clearError()
@@ -103,9 +104,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       const errorMessage = err instanceof Error ? err.message : 'Đăng nhập thất bại'
       setLocalError(errorMessage)
     }
-  }
+  }, [loginEmail, loginPassword, login, clearError])
 
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
+  const handleRegisterSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     setLocalError(null)
     clearError()
@@ -128,7 +129,23 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       const errorMessage = err instanceof Error ? err.message : 'Đăng ký thất bại'
       setLocalError(errorMessage)
     }
-  }
+  }, [registerName, registerEmail, registerPhone, registerPassword, registerConfirmPassword, register, clearError])
+
+  const toggleLoginMode = useCallback(() => {
+    setIsLogin(true)
+  }, [])
+
+  const toggleRegisterMode = useCallback(() => {
+    setIsLogin(false)
+  }, [])
+
+  const toggleShowPassword = useCallback(() => {
+    setShowPassword((prev) => !prev)
+  }, [])
+
+  const toggleShowConfirmPassword = useCallback(() => {
+    setShowConfirmPassword((prev) => !prev)
+  }, [])
 
   const displayError = localError || error
 
@@ -167,7 +184,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             {/* Toggle Tabs */}
             <div className="flex items-center justify-center mb-4 bg-slate-100 rounded-lg p-1">
               <button
-                onClick={() => setIsLogin(true)}
+                onClick={toggleLoginMode}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                   isLogin
                     ? 'bg-white text-blue-600 shadow-sm'
@@ -178,7 +195,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 Đăng nhập
               </button>
               <button
-                onClick={() => setIsLogin(false)}
+                onClick={toggleRegisterMode}
                 className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                   !isLogin
                     ? 'bg-white text-blue-600 shadow-sm'
@@ -252,7 +269,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={toggleShowPassword}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200 cursor-pointer"
                       aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                     >
@@ -370,7 +387,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={toggleShowPassword}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200 cursor-pointer"
                       aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                     >
@@ -402,7 +419,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={toggleShowConfirmPassword}
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors duration-200 cursor-pointer"
                       aria-label={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                     >

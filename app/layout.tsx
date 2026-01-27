@@ -1,9 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import React from 'react'
-import ChatBot from '@/components/ChatBot'
+import dynamic from 'next/dynamic'
 import { AuthProvider } from '@/lib/auth/auth-context'
 import './globals.css'
+
+// Lazy load ChatBot component to reduce initial bundle size
+const ChatBot = dynamic(() => import('@/components/ChatBot'), {
+  ssr: false, // ChatBot likely uses browser APIs, so disable SSR
+})
 
 const inter = Inter({ subsets: ['latin', 'vietnamese'] })
 

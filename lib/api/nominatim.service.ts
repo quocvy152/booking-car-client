@@ -7,6 +7,7 @@
 import { API_CONFIG, API_HEADERS, buildNominatimUrl } from './config'
 import type { NominatimSearchParams, NominatimSuggestion } from './types'
 import { ApiError } from './types'
+import { cachedFetch, generateCacheKey } from './cache'
 
 /**
  * Search for location suggestions using Nominatim API
@@ -30,31 +31,41 @@ export async function searchLocations(
       query,
       params as Partial<typeof API_CONFIG.NOMINATIM.DEFAULT_PARAMS>
     )
-    const response = await fetch(url, {
-      headers: API_HEADERS.NOMINATIM,
-      // Add cache control for better performance
-      cache: 'force-cache',
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    })
+    
+    // Generate cache key
+    const cacheKey = generateCacheKey(url, { query, ...params })
+    
+    // Use cached fetch with 1 hour TTL
+    const data = await cachedFetch<NominatimSuggestion[]>(
+      cacheKey,
+      async () => {
+        const response = await fetch(url, {
+          headers: API_HEADERS.NOMINATIM,
+        })
 
-    if (!response.ok) {
-      throw new Error(`Nominatim API error: ${response.status} ${response.statusText}`)
-    }
+        if (!response.ok) {
+          throw new Error(`Nominatim API error: ${response.status} ${response.statusText}`)
+        }
 
-    const data = await response.json()
+        const jsonData = await response.json()
 
-    // Validate response is an array
-    if (!Array.isArray(data)) {
-      return []
-    }
+        // Validate response is an array
+        if (!Array.isArray(jsonData)) {
+          return []
+        }
 
-    // Map response to our type
-    return data.map((item) => ({
-      place_id: item.place_id,
-      display_name: item.display_name,
-      lat: parseFloat(item.lat),
-      lon: parseFloat(item.lon),
-    }))
+        // Map response to our type
+        return jsonData.map((item) => ({
+          place_id: item.place_id,
+          display_name: item.display_name,
+          lat: parseFloat(item.lat),
+          lon: parseFloat(item.lon),
+        }))
+      },
+      60 * 60 * 1000 // 1 hour TTL
+    )
+
+    return data
   } catch (error) {
     // Log error for debugging
     console.error('Error fetching location suggestions from Nominatim:', error)
@@ -83,18 +94,28 @@ export async function reverseGeocode(lat: number, lon: number): Promise<string |
   try {
     const url = `${process.env.NEXT_PUBLIC_NOMINATIM_URL || 'https://nominatim.openstreetmap.org'}/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`
     
-    const response = await fetch(url, {
-      headers: API_HEADERS.NOMINATIM,
-      cache: 'force-cache',
-      next: { revalidate: 3600 },
-    })
+    // Generate cache key
+    const cacheKey = generateCacheKey(url, { lat, lon })
+    
+    // Use cached fetch with 1 hour TTL
+    const data = await cachedFetch<string | null>(
+      cacheKey,
+      async () => {
+        const response = await fetch(url, {
+          headers: API_HEADERS.NOMINATIM,
+        })
 
-    if (!response.ok) {
-      return null
-    }
+        if (!response.ok) {
+          return null
+        }
 
-    const data = await response.json()
-    return data.display_name || null
+        const jsonData = await response.json()
+        return jsonData.display_name || null
+      },
+      60 * 60 * 1000 // 1 hour TTL
+    )
+
+    return data
   } catch (error) {
     console.error('Error in reverse geocoding:', error)
     return null
